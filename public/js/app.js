@@ -4,7 +4,7 @@
  */
 
 // Global App State
-let socket; // CHAT FIX: Declare socket globally here so the bottom event handlers don't crash the script!
+const socket = io(); // CHAT FIX: Safely instantiate the Socket engine link immediately
 
 const state = {
   stations: [],
@@ -56,17 +56,21 @@ const dom = {
   chatStationSubtitle: document.getElementById("chat-station-subtitle"),
   chatMessages: document.getElementById("chat-messages"),
   chatInput: document.getElementById("chat-input"),
-  chatSendBtn: document.getElementById("chat-send-btn")
+  chatSendBtn: document.getElementById("chat-send-btn"),
+  usernamePickerBtn: document.getElementById("username-picker-btn"),
+  usernameDisplay: document.getElementById("username-display")
 };
 
 // ==========================================================================
 // Initialization
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", async () => {
-  socket = io(); // CHAT FIX: Safely instantiate the Socket engine link after DOM components are ready
-  
   loadFavorites();
   initTimePicker();
+  const userId = initUsername();
+  if (socket && userId) {
+    socket.emit('authenticate', userId);
+  }
   setupEventListeners();
   
   // Fetch initial configuration
@@ -76,6 +80,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Poll timeline info every 60s to refresh next-boat status
   state.refreshTimelineInterval = setInterval(fetchStations, 60000);
 });
+
+// ==========================================================================
+// Chat Username Identity System
+// ==========================================================================
+function initUsername() {
+  let userId = localStorage.getItem("ebangka_userId");
+  if (!userId) {
+    userId = "uid_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem("ebangka_userId", userId);
+  }
+  
+  // Display current local username placeholder until server confirms
+  let username = localStorage.getItem("ebangka_username") || "Commuter";
+  if (dom.usernameDisplay) {
+    dom.usernameDisplay.textContent = username;
+  }
+  
+  return userId;
+}
+
+function promptChangeUsername() {
+  const current = localStorage.getItem("ebangka_username") || "";
+  const nextUsername = prompt("Enter your new display name (max 15 characters):", current);
+  if (nextUsername !== null) {
+    const cleaned = nextUsername.trim().substring(0, 15);
+    if (cleaned && cleaned !== current) {
+      const userId = localStorage.getItem("ebangka_userId");
+      if (socket && userId) {
+        socket.emit('changeUsername', { userId, newUsername: cleaned });
+      }
+    }
+  }
+}
 
 // ==========================================================================
 // Local Storage Favorites
@@ -216,6 +253,11 @@ function setupEventListeners() {
     }
     fetchStations();
   });
+
+  // Username Picker Click
+  if (dom.usernamePickerBtn) {
+    dom.usernamePickerBtn.addEventListener("click", promptChangeUsername);
+  }
 }
 
 // ==========================================================================
@@ -847,6 +889,26 @@ if (socket) {
       appendMessageToUI(msg);
     }
   });
+
+  // 3. Resolve user identity on connection
+  socket.on('identityResolved', ({ username }) => {
+    localStorage.setItem("ebangka_username", username);
+    if (dom.usernameDisplay) {
+      dom.usernameDisplay.textContent = username;
+    }
+  });
+
+  // 4. Handle response of nickname claims
+  socket.on('usernameChanged', (result) => {
+    if (result.success) {
+      localStorage.setItem("ebangka_username", result.username);
+      if (dom.usernameDisplay) {
+        dom.usernameDisplay.textContent = result.username;
+      }
+    } else {
+      alert("Error: " + (result.error || "Could not change username."));
+    }
+  });
 }
 
 // 3. Helper to format a message row inside the YouTube layout container
@@ -855,6 +917,9 @@ function appendMessageToUI(msg) {
   
   const msgRow = document.createElement("div");
   msgRow.className = "chat-message-row";
+  if (msg.isSystem || msg.username === "SYSTEM" || msg.username === "SYSTEM ALERT") {
+    msgRow.classList.add("system-alert");
+  }
   msgRow.innerHTML = `
     <span class="chat-time">[${msg.timestamp || 'Live'}]</span>
     <strong class="chat-user">${msg.username}:</strong> 
@@ -879,8 +944,9 @@ function dispatchSocketMessage() {
   if (!activeStation || !dom.chatInput || !dom.chatInput.value.trim()) return;
 
   if (socket) {
+    const savedUsername = localStorage.getItem("ebangka_username") || "Commuter";
     socket.emit('sendMessage', {
-      username: "Commuter_" + Math.floor(Math.random() * 900 + 100),
+      username: savedUsername,
       text: dom.chatInput.value.trim(),
       stationId: activeStation
     });

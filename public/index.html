@@ -342,38 +342,40 @@
               </div>
             </div>
 
-            <!-- Full Daily Departure List -->
-            <div class="schedule-section">
-              <h3 class="schedule-title">Daily Departure Schedule</h3>
-              <div class="schedule-legend">
-                <span class="legend-item"
-                  ><span class="legend-dot status-past"></span> Past Trips</span
-                >
-                <span class="legend-item"
-                  ><span class="legend-dot status-next"></span> Next Trip</span
-                >
-                <span class="legend-item"
-                  ><span class="legend-dot status-future"></span> Upcoming
-                  Trips</span
-                >
-              </div>
-
-              <div id="schedule-timeline-grid" class="schedule-timeline-grid">
-                <!-- Dynamic departure slots will be injected here -->
-              </div>
-            </div>
-          </section>
-
-          <div class="schedule-chat-split-container">
-              
+            <!-- Full Daily Departure List & Chat (Side-by-Side Split) -->
+            <div class="schedule-chat-split-container">
+              <!-- Left Column: Departure List -->
               <div class="schedule-grid-column">
-                <div id="schedule-timeline-grid" class="schedule-timeline-grid">
+                <div class="schedule-section">
+                  <h3 class="schedule-title">Daily Departure Schedule</h3>
+                  <div class="schedule-legend">
+                    <span class="legend-item"
+                      ><span class="legend-dot status-past"></span> Past Trips</span
+                    >
+                    <span class="legend-item"
+                      ><span class="legend-dot status-next"></span> Next Trip</span
+                    >
+                    <span class="legend-item"
+                      ><span class="legend-dot status-future"></span> Upcoming
+                      Trips</span
+                    >
                   </div>
+
+                  <div id="schedule-timeline-grid" class="schedule-timeline-grid">
+                    <!-- Dynamic departure slots will be injected here -->
+                  </div>
+                </div>
               </div>
 
+              <!-- Right Column: Community Chat Board -->
               <div class="integrated-chat-panel">
                 <div class="integrated-chat-header">
-                  <h4>💬 Station Live Community Board</h4>
+                  <div class="chat-header-top">
+                    <h4>💬 Station Live Community Board</h4>
+                    <button id="username-picker-btn" class="username-picker-btn" title="Change Username">
+                      👤 <span id="username-display">Commuter</span>
+                    </button>
+                  </div>
                   <span id="chat-station-subtitle">Select a station to synchronize chat logs</span>
                 </div>
                 
@@ -384,9 +386,8 @@
                   <button id="chat-send-btn">Send</button>
                 </div>
               </div>
-
-            </div> </div>
-        </section>
+            </div>
+          </section>
 
         <section
           id="station-placeholder-panel"
@@ -435,21 +436,7 @@
           </p>
         </div>
       </footer>
-    </div> </div> <div id="sidebar-chat" class="chat-sidebar">
-      <div class="chat-header">
-        <h3>Station Community Chat</h3>
-        <span id="chat-station-subtitle">Select a station to join</span>
-      </div>
-      
-      <div id="chat-messages" class="chat-messages-container"></div>
-      
-      <div class="chat-footer">
-        <input type="text" id="chat-input" placeholder="Send a message..." autocomplete="off">
-        <button id="chat-send-btn">
-          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z" fill="currentColor"/></svg>
-        </button>
-      </div>
-    </div>
+    </div> </div>
 
   </div> <script src="/socket.io/socket.io.js"></script>
   <script src="js/app.js"></script>
