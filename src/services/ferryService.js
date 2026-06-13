@@ -29,6 +29,8 @@ function loadSchedules() {
       city: info.city,
       address: info.address,
       direction: info.direction,
+      latitude: info.latitude,
+      longitude: info.longitude,
       departures: info.departures,
       scheduleMinutes: transformSchedule(info.departures),
     };
@@ -159,4 +161,5 @@ module.exports = {
   getOperationalInfo,
   resolveCurrentMinutes,
   loadSchedules,
+  getAllStations: () => stations,
 };

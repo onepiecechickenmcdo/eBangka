@@ -27,6 +27,10 @@ const dom = {
   activeStationPanel: document.getElementById("active-station-panel"),
   stationPlaceholderPanel: document.getElementById("station-placeholder-panel"),
   
+  // Location Feature
+  findNearestBtn: document.getElementById("find-nearest-btn"),
+  locationResult: document.getElementById("location-result"),
+  
   // Details pane
   detailStationCity: document.getElementById("detail-station-city"),
   detailStationName: document.getElementById("detail-station-name"),
@@ -147,6 +151,9 @@ function setupEventListeners() {
       filterAndRenderTimeline();
     });
   });
+  
+  // Location-based nearest station button
+  dom.findNearestBtn.addEventListener("click", findNearestStation);
   
   // Star icon click
   dom.favoriteToggleBtn.addEventListener("click", () => {
@@ -550,4 +557,251 @@ function format12h(time24) {
   h = h ? h : 12; // if h is 0, make it 12
   
   return `${h}:${m} ${ampm}`;
+}
+
+// ==========================================================================
+// Location-Based Feature: Find Nearest Ferry Station
+// ==========================================================================
+
+/**
+ * Request user's geolocation and find the nearest ferry station
+ * Uses browser Geolocation API (requests user permission)
+ * Calls backend /nearest-station endpoint with user coordinates
+ * 
+ * Algorithm Flow:
+ * 1. Request user permission via navigator.geolocation.getCurrentPosition
+ * 2. Send lat/lng to backend /nearest-station?lat=X&lng=Y
+ * 3. Backend uses Haversine formula to find nearest station (O(n) = 13 stations)
+ * 4. Display result with distance and navigation link
+ */
+async function findNearestStation() {
+  // Show loading state
+  dom.findNearestBtn.disabled = true;
+  dom.findNearestBtn.innerHTML = '<span>📍 Getting location...</span>';
+  dom.locationResult.classList.add("hidden");
+
+  // Request user's current location
+  // This triggers browser permission prompt
+  if (!navigator.geolocation) {
+    showLocationError("Geolocation not supported by this browser");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => handleLocationSuccess(position),
+    (error) => handleLocationError(error)
+  );
+}
+
+/**
+ * Handle successful geolocation retrieval
+ * @param {GeolocationPosition} position - Contains coords with latitude and longitude
+ */
+async function handleLocationSuccess(position) {
+  const { latitude, longitude } = position.coords;
+  
+  try {
+    // Call backend endpoint to find nearest station using Haversine
+    const url = `/nearest-station?lat=${latitude}&lng=${longitude}`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error("Failed to find nearest station");
+    }
+    
+    const nearestStationData = await response.json();
+    displayNearestStationResult(nearestStationData, latitude, longitude);
+    
+  } catch (err) {
+    showLocationError(`Error finding nearest station: ${err.message}`);
+  } finally {
+    // Reset button state
+    dom.findNearestBtn.disabled = false;
+    dom.findNearestBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path><path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path></svg><span>My Location</span>';
+  }
+}
+
+/**
+ * Handle geolocation errors (permission denied, location unavailable, etc.)
+ * @param {GeolocationPositionError} error
+ */
+function handleLocationError(error) {
+  let errorMsg = "Unable to get your location";
+  
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      errorMsg = "Location permission denied. Enable location access in browser settings.";
+      break;
+    case error.POSITION_UNAVAILABLE:
+      errorMsg = "Location information is not available.";
+      break;
+    case error.TIMEOUT:
+      errorMsg = "Location request timed out.";
+      break;
+  }
+  
+  showLocationError(errorMsg);
+}
+
+/**
+ * Display nearest station result with embedded map and navigation options
+ * @param {Object} stationData - Contains station, distance, latitude, longitude, address
+ * @param {number} userLat - User's latitude
+ * @param {number} userLon - User's longitude
+ */
+function displayNearestStationResult(stationData, userLat, userLon) {
+  const { station, distance, latitude: stationLat, longitude: stationLon, address, city } = stationData;
+  
+  // Format distance: show in km with 2 decimal places
+  const distanceStr = distance < 1 
+    ? `${Math.round(distance * 1000)} meters` 
+    : `${distance.toFixed(2)} km`;
+  
+  // Generate unique map ID for this result
+  const mapId = `map-${Date.now()}`;
+  
+  dom.locationResult.innerHTML = `
+    <div class="location-card">
+      <div class="location-status">
+        <svg class="location-check" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/>
+          <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="status-text">Nearest Station Found</span>
+      </div>
+      <div class="nearest-station-info">
+        <h4 class="station-name">${station}</h4>
+        <p class="station-meta">${city} • ${distanceStr} away</p>
+        <p class="station-address">📍 ${address}</p>
+      </div>
+      
+      <!-- Embedded Map -->
+      <div id="${mapId}" class="location-map"></div>
+      
+      <!-- Distance and Direction Info -->
+      <div class="location-map-info">
+        <div class="distance-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 8v8M8 12h8"></path>
+          </svg>
+          <span>${distanceStr}</span>
+        </div>
+        <p class="direction-hint">📍 Station location shown on map above</p>
+      </div>
+      
+      <div class="location-actions">
+        <button class="btn btn-navigate" onclick="openLocationInMaps(${stationLat}, ${stationLon})">
+          🗺️ Open in Maps App
+        </button>
+        <button class="btn btn-select" onclick="selectStation('${station}')">
+          View Schedule
+        </button>
+      </div>
+    </div>
+  `;
+  
+  dom.locationResult.classList.remove("hidden");
+  
+  // Initialize map after DOM is rendered
+  setTimeout(() => {
+    initializeMap(mapId, userLat, userLon, stationLat, stationLon, station);
+  }, 100);
+}
+
+/**
+ * Initialize embedded map using Leaflet
+ * Shows user location and nearest station on interactive map
+ */
+function initializeMap(mapId, userLat, userLon, stationLat, stationLon, stationName) {
+  try {
+    // Create map centered between user and station
+    const centerLat = (userLat + stationLat) / 2;
+    const centerLon = (userLon + stationLon) / 2;
+    
+    const map = L.map(mapId).setView([centerLat, centerLon], 15);
+    
+    // Add OpenStreetMap tiles (free, no API key needed)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+    
+    // Add user location marker (blue)
+    L.circleMarker([userLat, userLon], {
+      radius: 8,
+      fillColor: '#06b6d4',
+      color: '#0c1524',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.8
+    }).addTo(map)
+      .bindPopup('📍 Your Location', { autoClose: false });
+    
+    // Add station marker (green)
+    L.marker([stationLat, stationLon], {
+      icon: L.icon({
+        iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjEgMTBjMCA3LTkgMTMtOSAxM3MtOSAtNi05IC0xM2E5IDkgMCAwIDEgMTggMHoiPjwvcGF0aD48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSIzIj48L2NpcmNsZT48L3N2Zz4=',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      })
+    }).addTo(map)
+      .bindPopup(`🚤 ${stationName} Station`, { autoClose: false })
+      .openPopup();
+    
+    // Draw line between user and station
+    L.polyline([
+      [userLat, userLon],
+      [stationLat, stationLon]
+    ], {
+      color: '#06b6d4',
+      weight: 2,
+      opacity: 0.5,
+      dashArray: '5, 5'
+    }).addTo(map);
+    
+    // Fit map to show both points
+    const bounds = L.latLngBounds([
+      [userLat, userLon],
+      [stationLat, stationLon]
+    ]);
+    map.fitBounds(bounds, { padding: [50, 50] });
+    
+  } catch (err) {
+    console.error('Error initializing map:', err);
+    document.getElementById(mapId).innerHTML = '<p style="color: #ef4444; padding: 20px; text-align: center;">Map could not be loaded</p>';
+  }
+}
+
+/**
+ * Open location in native Maps app or Google Maps
+ * Works on mobile and desktop
+ */
+function openLocationInMaps(lat, lng) {
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+  window.open(mapsUrl, '_blank');
+}
+
+/**
+ * Show location error message to user
+ * @param {string} message - Error message to display
+ */
+function showLocationError(message) {
+  dom.locationResult.innerHTML = `
+    <div class="location-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <p>${message}</p>
+    </div>
+  `;
+  
+  dom.locationResult.classList.remove("hidden");
+  
+  // Reset button state
+  dom.findNearestBtn.disabled = false;
+  dom.findNearestBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path><path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path></svg><span>My Location</span>';
 }

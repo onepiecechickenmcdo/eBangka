@@ -1,235 +1,421 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>eBangka — Pasig River Ferry Schedule Tracking & Next-Trip Predictor</title>
-  <meta name="description" content="Track Pasig River Ferry schedules in real-time. Select stations, see departure countdowns, and plan your commute using the eBangka transit dashboard with simulated time traveler controls.">
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <div class="app-container">
-    
-    <!-- Top Header -->
-    <header class="app-header">
-      <div class="header-brand">
-        <!-- Logo SVG -->
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M2 17h20M2 20h20M5 14l2-8h10l2 8H5z" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 2v4M9 3v1M15 3v1" stroke-linecap="round"/>
-        </svg>
-        <div class="brand-text">
-          <h1>eBangka</h1>
-          <p class="brand-sub">Pasig River Ferry schedule tracking</p>
-        </div>
-      </div>
-      
-      <!-- Live Operational Status Indicator -->
-      <div class="header-status-panel">
-        <div id="service-status-pill" class="status-pill status-loading">
-          <span class="status-dot"></span>
-          <span id="service-status-text">Checking Service...</span>
-        </div>
-        <div class="fare-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="4" width="20" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="12" cy="12" r="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 8h.01M8 16h.01" stroke-linecap="round" stroke-linejoin="round"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      eBangka — Pasig River Ferry Schedule Tracking & Next-Trip Predictor
+    </title>
+    <meta
+      name="description"
+      content="Track Pasig River Ferry schedules in real-time. Select stations, see departure countdowns, and plan your commute using the eBangka transit dashboard with simulated time traveler controls."
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Leaflet Map Library (for embedded maps) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Top Header -->
+      <header class="app-header">
+        <div class="header-brand">
+          <!-- Logo SVG -->
+          <svg
+            class="logo-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M2 17h20M2 20h20M5 14l2-8h10l2 8H5z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path d="M12 2v4M9 3v1M15 3v1" stroke-linecap="round" />
           </svg>
-          <span>FARE: FREE</span>
+          <div class="brand-text">
+            <h1>eBangka</h1>
+            <p class="brand-sub">Pasig River Ferry schedule tracking</p>
+          </div>
         </div>
-      </div>
-    </header>
 
-    <!-- Main Content Area -->
-    <div class="main-layout">
-      
-      <!-- Sidebar Panel: Station Search & Route Map -->
-      <aside class="sidebar">
-        
-        <!-- Search & Direction Filters -->
-        <div class="search-filter-section glass-panel">
-          <div class="search-wrapper">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <!-- Live Operational Status Indicator -->
+        <div class="header-status-panel">
+          <div id="service-status-pill" class="status-pill status-loading">
+            <span class="status-dot"></span>
+            <span id="service-status-text">Checking Service...</span>
+          </div>
+          <div class="fare-badge">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect
+                x="2"
+                y="4"
+                width="20"
+                height="16"
+                rx="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16 8h.01M8 16h.01"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
-            <input type="text" id="station-search" placeholder="Search stations, cities, cities..." autocomplete="off">
-          </div>
-          
-          <div class="direction-tabs">
-            <button class="dir-tab active" data-dir="all">All</button>
-            <button class="dir-tab" data-dir="downstream">
-              <span class="tab-arrow">↓</span> Downstream
-            </button>
-            <button class="dir-tab" data-dir="upstream">
-              <span class="tab-arrow">↑</span> Upstream
-            </button>
+            <span>FARE: FREE</span>
           </div>
         </div>
+      </header>
 
-        <!-- Favorites Bar (Hidden by default until stations are starred) -->
-        <section id="favorites-section" class="favorites-section glass-panel hidden">
-          <h3>Starred Stations</h3>
-          <div id="favorites-list" class="favorites-list">
-            <!-- Dynamic favorite buttons -->
-          </div>
-        </section>
-
-        <!-- Vertical Route / Timeline Map -->
-        <section class="route-map-section glass-panel">
-          <div class="section-header">
-            <h2>Route Timeline Map</h2>
-            <span class="direction-hint" title="Visual representation from Pasig (Pinagbuhatan) downstream to Manila (Escolta/Quinta)">East to West</span>
-          </div>
-          <div class="route-container">
-            <!-- Route line backing -->
-            <div class="route-river-line"></div>
-            <!-- Dynamic station nodes -->
-            <div id="stations-timeline" class="stations-timeline">
-              <div class="timeline-skeleton">Loading station map...</div>
+      <!-- Main Content Area -->
+      <div class="main-layout">
+        <!-- Sidebar Panel: Station Search & Route Map -->
+        <aside class="sidebar">
+          <!-- Search & Direction Filters -->
+          <div class="search-filter-section glass-panel">
+            <div class="search-wrapper">
+              <svg
+                class="search-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                id="station-search"
+                placeholder="Search stations, cities, cities..."
+                autocomplete="off"
+              />
             </div>
-          </div>
-        </section>
-      </aside>
 
-      <!-- Main Panel: Next Ferry countdown & Full Schedule -->
-      <main class="details-view">
-        
-        <!-- Active Station Information -->
-        <section id="active-station-panel" class="active-station-panel glass-panel hidden">
-          
-          <div class="station-detail-header">
-            <div class="station-meta-block">
-              <span id="detail-station-city" class="city-badge">Pasig City</span>
-              <h2 id="detail-station-name">Guadalupe Station</h2>
-              <div class="station-address-row">
-                <svg class="map-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
+            <!-- Location-Based Nearest Station Button -->
+            <div class="location-section">
+              <button
+                id="find-nearest-btn"
+                class="btn btn-location"
+                title="Find nearest ferry station using your location"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <path d="M12 1v6m0 6v6"></path>
+                  <path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path>
+                  <path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path>
                 </svg>
-                <span id="detail-station-address">Guadalupe, Makati City</span>
+                <span>My Location</span>
+              </button>
+              <div id="location-result" class="location-result hidden">
+                <!-- Results will be shown here -->
               </div>
             </div>
-            
-            <div class="station-header-actions">
-              <!-- Star/Favorite toggle button -->
-              <button id="favorite-toggle-btn" class="favorite-toggle-btn" aria-label="Favorite this station">
-                <svg id="star-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
+
+            <div class="direction-tabs">
+              <button class="dir-tab active" data-dir="all">All</button>
+              <button class="dir-tab" data-dir="downstream">
+                <span class="tab-arrow">↓</span> Downstream
+              </button>
+              <button class="dir-tab" data-dir="upstream">
+                <span class="tab-arrow">↑</span> Upstream
               </button>
             </div>
           </div>
 
-          <!-- Main countdown dashboard card -->
-          <div class="countdown-hero-card">
-            <div class="hero-left">
-              <span class="countdown-label">NEXT FERRY DEPARTURE</span>
-              <div id="countdown-timer-display" class="countdown-time">15m 24s</div>
-              <p id="countdown-secondary-info" class="countdown-desc">Estimated departure at 08:30 AM</p>
+          <!-- Favorites Bar (Hidden by default until stations are starred) -->
+          <section
+            id="favorites-section"
+            class="favorites-section glass-panel hidden"
+          >
+            <h3>Starred Stations</h3>
+            <div id="favorites-list" class="favorites-list">
+              <!-- Dynamic favorite buttons -->
             </div>
-            
-            <div class="hero-right">
-              <div class="ferry-pulsar">
-                <svg class="pulse-boat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M2 17h20M2 20h20M5 14l2-8h10l2 8H5z" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div class="pulse-ring ring-1"></div>
-                <div class="pulse-ring ring-2"></div>
-              </div>
-            </div>
-          </div>
+          </section>
 
-          <!-- Time Machine Control Card -->
-          <div class="time-machine-container card-panel">
-            <div class="time-machine-header">
-              <div class="tm-title">
-                <svg class="time-machine-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                  <path d="M12 2a10 10 0 0 0-7.54 3.42l-2.46-2.42V9h6L5.59 6.59A8 8 0 1 1 4 12" stroke-dasharray="2,2"></path>
-                </svg>
-                <h3>Interactive Time Machine</h3>
-              </div>
-              <div class="toggle-switch-wrapper">
-                <span class="toggle-label">Enable Time Travel</span>
-                <label class="switch">
-                  <input type="checkbox" id="time-machine-toggle">
-                  <span class="slider round"></span>
-                </label>
+          <!-- Vertical Route / Timeline Map -->
+          <section class="route-map-section glass-panel">
+            <div class="section-header">
+              <h2>Route Timeline Map</h2>
+              <span
+                class="direction-hint"
+                title="Visual representation from Pasig (Pinagbuhatan) downstream to Manila (Escolta/Quinta)"
+                >East to West</span
+              >
+            </div>
+            <div class="route-container">
+              <!-- Route line backing -->
+              <div class="route-river-line"></div>
+              <!-- Dynamic station nodes -->
+              <div id="stations-timeline" class="stations-timeline">
+                <div class="timeline-skeleton">Loading station map...</div>
               </div>
             </div>
-            
-            <div id="time-machine-controls" class="time-machine-controls disabled">
-              <div class="control-row">
-                <label for="time-machine-picker">Simulated Trip Time:</label>
-                <div class="picker-wrapper">
-                  <input type="time" id="time-machine-picker" value="08:00">
-                  <button id="use-current-time-btn" class="btn btn-secondary btn-sm" disabled>Use Live Time</button>
+          </section>
+        </aside>
+
+        <!-- Main Panel: Next Ferry countdown & Full Schedule -->
+        <main class="details-view">
+          <!-- Active Station Information -->
+          <section
+            id="active-station-panel"
+            class="active-station-panel glass-panel hidden"
+          >
+            <div class="station-detail-header">
+              <div class="station-meta-block">
+                <span id="detail-station-city" class="city-badge"
+                  >Pasig City</span
+                >
+                <h2 id="detail-station-name">Guadalupe Station</h2>
+                <div class="station-address-row">
+                  <svg
+                    class="map-pin-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                    ></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span id="detail-station-address"
+                    >Guadalupe, Makati City</span
+                  >
                 </div>
               </div>
-              <p class="time-machine-hint">
-                Simulates standard weekday Schedules based on custom commuter arrival hours.
+
+              <div class="station-header-actions">
+                <!-- Star/Favorite toggle button -->
+                <button
+                  id="favorite-toggle-btn"
+                  class="favorite-toggle-btn"
+                  aria-label="Favorite this station"
+                >
+                  <svg
+                    id="star-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    ></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Main countdown dashboard card -->
+            <div class="countdown-hero-card">
+              <div class="hero-left">
+                <span class="countdown-label">NEXT FERRY DEPARTURE</span>
+                <div id="countdown-timer-display" class="countdown-time">
+                  15m 24s
+                </div>
+                <p id="countdown-secondary-info" class="countdown-desc">
+                  Estimated departure at 08:30 AM
+                </p>
+              </div>
+
+              <div class="hero-right">
+                <div class="ferry-pulsar">
+                  <svg
+                    class="pulse-boat"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M2 17h20M2 20h20M5 14l2-8h10l2 8H5z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  <div class="pulse-ring ring-1"></div>
+                  <div class="pulse-ring ring-2"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Time Machine Control Card -->
+            <div class="time-machine-container card-panel">
+              <div class="time-machine-header">
+                <div class="tm-title">
+                  <svg
+                    class="time-machine-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                    <path
+                      d="M12 2a10 10 0 0 0-7.54 3.42l-2.46-2.42V9h6L5.59 6.59A8 8 0 1 1 4 12"
+                      stroke-dasharray="2,2"
+                    ></path>
+                  </svg>
+                  <h3>Interactive Time Machine</h3>
+                </div>
+                <div class="toggle-switch-wrapper">
+                  <span class="toggle-label">Enable Time Travel</span>
+                  <label class="switch">
+                    <input type="checkbox" id="time-machine-toggle" />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div
+                id="time-machine-controls"
+                class="time-machine-controls disabled"
+              >
+                <div class="control-row">
+                  <label for="time-machine-picker">Simulated Trip Time:</label>
+                  <div class="picker-wrapper">
+                    <input type="time" id="time-machine-picker" value="08:00" />
+                    <button
+                      id="use-current-time-btn"
+                      class="btn btn-secondary btn-sm"
+                      disabled
+                    >
+                      Use Live Time
+                    </button>
+                  </div>
+                </div>
+                <p class="time-machine-hint">
+                  Simulates standard weekday Schedules based on custom commuter
+                  arrival hours.
+                </p>
+              </div>
+            </div>
+
+            <!-- Full Daily Departure List -->
+            <div class="schedule-section">
+              <h3 class="schedule-title">Daily Departure Schedule</h3>
+              <div class="schedule-legend">
+                <span class="legend-item"
+                  ><span class="legend-dot status-past"></span> Past Trips</span
+                >
+                <span class="legend-item"
+                  ><span class="legend-dot status-next"></span> Next Trip</span
+                >
+                <span class="legend-item"
+                  ><span class="legend-dot status-future"></span> Upcoming
+                  Trips</span
+                >
+              </div>
+
+              <div id="schedule-timeline-grid" class="schedule-timeline-grid">
+                <!-- Dynamic departure slots will be injected here -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Placeholder when no station is selected -->
+          <section
+            id="station-placeholder-panel"
+            class="station-placeholder-panel glass-panel"
+          >
+            <div class="placeholder-content">
+              <svg
+                class="placeholder-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2v20M2 12h20" stroke-dasharray="4,4"></path>
+                <path
+                  d="M12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"
+                  stroke-width="2"
+                ></path>
+              </svg>
+              <h2>Welcome to eBangka</h2>
+              <p>
+                Select a ferry station from the route timeline on the left to
+                see addresses, dynamic schedules, and live countdowns for the
+                next boat.
               </p>
             </div>
-          </div>
+          </section>
+        </main>
+      </div>
 
-          <!-- Full Daily Departure List -->
-          <div class="schedule-section">
-            <h3 class="schedule-title">Daily Departure Schedule</h3>
-            <div class="schedule-legend">
-              <span class="legend-item"><span class="legend-dot status-past"></span> Past Trips</span>
-              <span class="legend-item"><span class="legend-dot status-next"></span> Next Trip</span>
-              <span class="legend-item"><span class="legend-dot status-future"></span> Upcoming Trips</span>
-            </div>
-            
-            <div id="schedule-timeline-grid" class="schedule-timeline-grid">
-              <!-- Dynamic departure slots will be injected here -->
-            </div>
-          </div>
-
-        </section>
-
-        <!-- Placeholder when no station is selected -->
-        <section id="station-placeholder-panel" class="station-placeholder-panel glass-panel">
-          <div class="placeholder-content">
-            <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 2v20M2 12h20" stroke-dasharray="4,4"></path>
-              <path d="M12 6a6 6 0 1 1 0 12 6 6 0 0 1 0-12z" stroke-width="2"></path>
-            </svg>
-            <h2>Welcome to eBangka</h2>
-            <p>Select a ferry station from the route timeline on the left to see addresses, dynamic schedules, and live countdowns for the next boat.</p>
-          </div>
-        </section>
-        
-      </main>
+      <!-- Page Footer -->
+      <footer class="app-footer">
+        <div class="footer-info">
+          <p>
+            <strong>eBangka Dashboard</strong> • Powered by Express API & static
+            MMDA schedules
+          </p>
+          <p class="tech-stack-details">
+            Algorithms: <span>Transform & Conquer (Schedule Sort)</span> &bull;
+            <span
+              >Decrease & Conquer (Binary Search O(log n) lower-bound
+              query)</span
+            >
+          </p>
+        </div>
+        <div class="footer-copy">
+          <p>
+            &copy; 2026 eBangka Project. Provided free for Metro Manila
+            commuters.
+          </p>
+        </div>
+      </footer>
     </div>
 
-    <!-- Page Footer -->
-    <footer class="app-footer">
-      <div class="footer-info">
-        <p><strong>eBangka Dashboard</strong> • Powered by Express API & static MMDA schedules</p>
-        <p class="tech-stack-details">
-          Algorithms: <span>Transform & Conquer (Schedule Sort)</span> &bull; <span>Decrease & Conquer (Binary Search O(log n) lower-bound query)</span>
-        </p>
-      </div>
-      <div class="footer-copy">
-        <p>&copy; 2026 eBangka Project. Provided free for Metro Manila commuters.</p>
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- Client-side Logic Script -->
-  <script src="js/app.js"></script>
-</body>
+    <!-- Client-side Logic Script -->
+    <script src="js/app.js"></script>
+  </body>
 </html>
