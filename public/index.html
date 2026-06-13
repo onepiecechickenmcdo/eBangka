@@ -29,7 +29,11 @@
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body>
+<body>
+  <div class="ebangka-master-layout">
+    
+    <div class="main-dashboard-content">
+
     <div class="app-container">
       <!-- Top Header -->
       <header class="app-header">
@@ -338,32 +342,56 @@
               </div>
             </div>
 
-            <!-- Full Daily Departure List -->
-            <div class="schedule-section">
-              <h3 class="schedule-title">Daily Departure Schedule</h3>
-              <div class="schedule-legend">
-                <span class="legend-item"
-                  ><span class="legend-dot status-past"></span> Past Trips</span
-                >
-                <span class="legend-item"
-                  ><span class="legend-dot status-next"></span> Next Trip</span
-                >
-                <span class="legend-item"
-                  ><span class="legend-dot status-future"></span> Upcoming
-                  Trips</span
-                >
+            <!-- Full Daily Departure List & Chat (Side-by-Side Split) -->
+            <div class="schedule-chat-split-container">
+              <!-- Left Column: Departure List -->
+              <div class="schedule-grid-column">
+                <div class="schedule-section">
+                  <h3 class="schedule-title">Daily Departure Schedule</h3>
+                  <div class="schedule-legend">
+                    <span class="legend-item"
+                      ><span class="legend-dot status-past"></span> Past Trips</span
+                    >
+                    <span class="legend-item"
+                      ><span class="legend-dot status-next"></span> Next Trip</span
+                    >
+                    <span class="legend-item"
+                      ><span class="legend-dot status-future"></span> Upcoming
+                      Trips</span
+                    >
+                  </div>
+
+                  <div id="schedule-timeline-grid" class="schedule-timeline-grid">
+                    <!-- Dynamic departure slots will be injected here -->
+                  </div>
+                </div>
               </div>
 
-              <div id="schedule-timeline-grid" class="schedule-timeline-grid">
-                <!-- Dynamic departure slots will be injected here -->
+              <!-- Right Column: Community Chat Board -->
+              <div class="integrated-chat-panel">
+                <div class="integrated-chat-header">
+                  <div class="chat-header-top">
+                    <h4>💬 Station Live Community Board</h4>
+                    <button id="username-picker-btn" class="username-picker-btn" title="Change Username">
+                      👤 <span id="username-display">Commuter</span>
+                    </button>
+                  </div>
+                  <span id="chat-station-subtitle">Select a station to synchronize chat logs</span>
+                </div>
+                
+                <div id="chat-messages" class="integrated-messages-box"></div>
+                
+                <div class="integrated-chat-footer">
+                  <input type="text" id="chat-input" placeholder="Broadcast a live update..." autocomplete="off">
+                  <button id="chat-send-btn">Send</button>
+                </div>
               </div>
             </div>
           </section>
 
-          <!-- Placeholder when no station is selected -->
-          <section
-            id="station-placeholder-panel"
-            class="station-placeholder-panel glass-panel"
+        <section
+          id="station-placeholder-panel"
+          class="station-placeholder-panel glass-panel"
           >
             <div class="placeholder-content">
               <svg
@@ -392,30 +420,25 @@
       </div>
 
       <!-- Page Footer -->
-      <footer class="app-footer">
+<footer class="app-footer">
         <div class="footer-info">
           <p>
-            <strong>eBangka Dashboard</strong> • Powered by Express API & static
-            MMDA schedules
+            <strong>eBangka Dashboard</strong> • Powered by Express API & static MMDA schedules
           </p>
           <p class="tech-stack-details">
             Algorithms: <span>Transform & Conquer (Schedule Sort)</span> &bull;
-            <span
-              >Decrease & Conquer (Binary Search O(log n) lower-bound
-              query)</span
-            >
+            <span>Decrease & Conquer (Binary Search O(log n) lower-bound query)</span>
           </p>
         </div>
         <div class="footer-copy">
           <p>
-            &copy; 2026 eBangka Project. Provided free for Metro Manila
-            commuters.
+            &copy; 2026 eBangka Project. Provided free for Metro Manila commuters.
           </p>
         </div>
       </footer>
-    </div>
+    </div> </div>
 
-    <!-- Client-side Logic Script -->
-    <script src="js/app.js"></script>
-  </body>
+  </div> <script src="/socket.io/socket.io.js"></script>
+  <script src="js/app.js"></script>
+</body>
 </html>

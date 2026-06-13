@@ -1,12 +1,25 @@
 const express = require("express");
 const path = require("path");
+const http = require("http"); // Required to bridge Express and Socket.io
+const { Server } = require("socket.io"); // Pull the Socket.io Server engine
 const apiRoutes = require("./routes/api");
+const handleStationChat = require("./communitychat/stationchat");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Create the standard HTTP server wrapping our Express instance
+const server = http.createServer(app);
+
+// Initialize Socket.io and attach it to the server instance
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
 // Enable CORS for all routes
-// This allows frontend apps (React, Vue, etc.) on different ports/domains to make requests
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -36,11 +49,15 @@ app.get("/", (_req, res) => {
 
 app.use(apiRoutes);
 
+// Boot up your real-time community chat event hub!
+handleStationChat(io);
+
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(PORT, () => {
+// CRITICAL: Change app.listen to server.listen so WebSockets actually work!
+server.listen(PORT, () => {
   console.log(`eBangka server running at http://localhost:${PORT}`);
 });

@@ -4,6 +4,8 @@
  */
 
 // Global App State
+const socket = io(); // CHAT FIX: Safely instantiate the Socket engine link immediately
+
 const state = {
   stations: [],
   operationalInfo: {},
@@ -48,7 +50,15 @@ const dom = {
   useCurrentTimeBtn: document.getElementById("use-current-time-btn"),
   
   // Schedule Grid
-  scheduleGrid: document.getElementById("schedule-timeline-grid")
+  scheduleGrid: document.getElementById("schedule-timeline-grid"),
+
+  // YouTube Live Style Chat Elements
+  chatStationSubtitle: document.getElementById("chat-station-subtitle"),
+  chatMessages: document.getElementById("chat-messages"),
+  chatInput: document.getElementById("chat-input"),
+  chatSendBtn: document.getElementById("chat-send-btn"),
+  usernamePickerBtn: document.getElementById("username-picker-btn"),
+  usernameDisplay: document.getElementById("username-display")
 };
 
 // ==========================================================================
@@ -57,6 +67,10 @@ const dom = {
 document.addEventListener("DOMContentLoaded", async () => {
   loadFavorites();
   initTimePicker();
+  const userId = initUsername();
+  if (socket && userId) {
+    socket.emit('authenticate', userId);
+  }
   setupEventListeners();
   
   // Fetch initial configuration
@@ -66,6 +80,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Poll timeline info every 60s to refresh next-boat status
   state.refreshTimelineInterval = setInterval(fetchStations, 60000);
 });
+
+// ==========================================================================
+// Chat Username Identity System
+// ==========================================================================
+function initUsername() {
+  let userId = localStorage.getItem("ebangka_userId");
+  if (!userId) {
+    userId = "uid_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    localStorage.setItem("ebangka_userId", userId);
+  }
+  
+  // Display current local username placeholder until server confirms
+  let username = localStorage.getItem("ebangka_username") || "Commuter";
+  if (dom.usernameDisplay) {
+    dom.usernameDisplay.textContent = username;
+  }
+  
+  return userId;
+}
+
+function promptChangeUsername() {
+  const current = localStorage.getItem("ebangka_username") || "";
+  const nextUsername = prompt("Enter your new display name (max 15 characters):", current);
+  if (nextUsername !== null) {
+    const cleaned = nextUsername.trim().substring(0, 15);
+    if (cleaned && cleaned !== current) {
+      const userId = localStorage.getItem("ebangka_userId");
+      if (socket && userId) {
+        socket.emit('changeUsername', { userId, newUsername: cleaned });
+      }
+    }
+  }
+}
 
 // ==========================================================================
 // Local Storage Favorites
@@ -206,6 +253,11 @@ function setupEventListeners() {
     }
     fetchStations();
   });
+
+  // Username Picker Click
+  if (dom.usernamePickerBtn) {
+    dom.usernamePickerBtn.addEventListener("click", promptChangeUsername);
+  }
 }
 
 // ==========================================================================
@@ -378,10 +430,23 @@ async function selectStation(stationName) {
     dom.stationPlaceholderPanel.classList.add("hidden");
     dom.activeStationPanel.classList.remove("hidden");
     
-    // Populate header info
+// Populate header info
     dom.detailStationName.textContent = scheduleData.station;
     dom.detailStationCity.textContent = scheduleData.city;
     dom.detailStationAddress.textContent = scheduleData.address;
+    
+    // CHAT ENGINE SYNC: Directly extract structural string out of rendering layout
+    setTimeout(() => {
+        const liveStationName = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+        if (liveStationName) {
+            if (dom.chatStationSubtitle) {
+                dom.chatStationSubtitle.textContent = `Live @ ${liveStationName}`;
+            }
+            if (socket) {
+                socket.emit('joinStationChat', liveStationName);
+            }
+        }
+    }, 50); // Small 50ms delay to make absolute sure her DOM paint cycle completes first!
     
     updateFavoriteButtonState();
     await refreshActiveStationData();
@@ -804,4 +869,88 @@ function showLocationError(message) {
   // Reset button state
   dom.findNearestBtn.disabled = false;
   dom.findNearestBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path><path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path></svg><span>My Location</span>';
+}
+// ==========================================================================
+// Twitch/YouTube Style Sidebar Chat Event Core Logic
+// ==========================================================================
+
+if (socket) {
+  // 1. Clear out old room bubbles and dump fresh history log
+  socket.on('loadHistory', (history) => {
+    if (!dom.chatMessages) return;
+    dom.chatMessages.innerHTML = ''; 
+    history.forEach(appendMessageToUI);
+  });
+
+  // 2. Hear real-time broadcasts from other commuting profiles
+  socket.on('chatMessage', (msg) => {
+    const activeStation = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+    if (activeStation && msg.stationId === activeStation) {
+      appendMessageToUI(msg);
+    }
+  });
+
+  // 3. Resolve user identity on connection
+  socket.on('identityResolved', ({ username }) => {
+    localStorage.setItem("ebangka_username", username);
+    if (dom.usernameDisplay) {
+      dom.usernameDisplay.textContent = username;
+    }
+  });
+
+  // 4. Handle response of nickname claims
+  socket.on('usernameChanged', (result) => {
+    if (result.success) {
+      localStorage.setItem("ebangka_username", result.username);
+      if (dom.usernameDisplay) {
+        dom.usernameDisplay.textContent = result.username;
+      }
+    } else {
+      alert("Error: " + (result.error || "Could not change username."));
+    }
+  });
+}
+
+// 3. Helper to format a message row inside the YouTube layout container
+function appendMessageToUI(msg) {
+  if (!dom.chatMessages) return;
+  
+  const msgRow = document.createElement("div");
+  msgRow.className = "chat-message-row";
+  if (msg.isSystem || msg.username === "SYSTEM" || msg.username === "SYSTEM ALERT") {
+    msgRow.classList.add("system-alert");
+  }
+  msgRow.innerHTML = `
+    <span class="chat-time">[${msg.timestamp || 'Live'}]</span>
+    <strong class="chat-user">${msg.username}:</strong> 
+    <span class="chat-body-text">${msg.text}</span>
+  `;
+  
+  dom.chatMessages.appendChild(msgRow);
+  dom.chatMessages.scrollTop = dom.chatMessages.scrollHeight; // Fast-scroll to latest text bubble
+}
+
+// 4. Input Listener Dispatches
+if (dom.chatSendBtn) dom.chatSendBtn.addEventListener("click", dispatchSocketMessage);
+if (dom.chatInput) {
+  dom.chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") dispatchSocketMessage();
+  });
+}
+
+// 5. Gather input payload values and dispatch up via the gateway engine
+function dispatchSocketMessage() {
+  const activeStation = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+  if (!activeStation || !dom.chatInput || !dom.chatInput.value.trim()) return;
+
+  if (socket) {
+    const savedUsername = localStorage.getItem("ebangka_username") || "Commuter";
+    socket.emit('sendMessage', {
+      username: savedUsername,
+      text: dom.chatInput.value.trim(),
+      stationId: activeStation
+    });
+  }
+
+  dom.chatInput.value = ""; // Zero-out the placeholder box field instantly
 }
