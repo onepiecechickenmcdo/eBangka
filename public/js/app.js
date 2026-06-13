@@ -4,6 +4,8 @@
  */
 
 // Global App State
+let socket; // CHAT FIX: Declare socket globally here so the bottom event handlers don't crash the script!
+
 const state = {
   stations: [],
   operationalInfo: {},
@@ -48,13 +50,21 @@ const dom = {
   useCurrentTimeBtn: document.getElementById("use-current-time-btn"),
   
   // Schedule Grid
-  scheduleGrid: document.getElementById("schedule-timeline-grid")
+  scheduleGrid: document.getElementById("schedule-timeline-grid"),
+
+  // YouTube Live Style Chat Elements
+  chatStationSubtitle: document.getElementById("chat-station-subtitle"),
+  chatMessages: document.getElementById("chat-messages"),
+  chatInput: document.getElementById("chat-input"),
+  chatSendBtn: document.getElementById("chat-send-btn")
 };
 
 // ==========================================================================
 // Initialization
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", async () => {
+  socket = io(); // CHAT FIX: Safely instantiate the Socket engine link after DOM components are ready
+  
   loadFavorites();
   initTimePicker();
   setupEventListeners();
@@ -378,10 +388,23 @@ async function selectStation(stationName) {
     dom.stationPlaceholderPanel.classList.add("hidden");
     dom.activeStationPanel.classList.remove("hidden");
     
-    // Populate header info
+// Populate header info
     dom.detailStationName.textContent = scheduleData.station;
     dom.detailStationCity.textContent = scheduleData.city;
     dom.detailStationAddress.textContent = scheduleData.address;
+    
+    // CHAT ENGINE SYNC: Directly extract structural string out of rendering layout
+    setTimeout(() => {
+        const liveStationName = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+        if (liveStationName) {
+            if (dom.chatStationSubtitle) {
+                dom.chatStationSubtitle.textContent = `Live @ ${liveStationName}`;
+            }
+            if (socket) {
+                socket.emit('joinStationChat', liveStationName);
+            }
+        }
+    }, 50); // Small 50ms delay to make absolute sure her DOM paint cycle completes first!
     
     updateFavoriteButtonState();
     await refreshActiveStationData();
@@ -804,4 +827,64 @@ function showLocationError(message) {
   // Reset button state
   dom.findNearestBtn.disabled = false;
   dom.findNearestBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path><path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path></svg><span>My Location</span>';
+}
+// ==========================================================================
+// Twitch/YouTube Style Sidebar Chat Event Core Logic
+// ==========================================================================
+
+if (socket) {
+  // 1. Clear out old room bubbles and dump fresh history log
+  socket.on('loadHistory', (history) => {
+    if (!dom.chatMessages) return;
+    dom.chatMessages.innerHTML = ''; 
+    history.forEach(appendMessageToUI);
+  });
+
+  // 2. Hear real-time broadcasts from other commuting profiles
+  socket.on('chatMessage', (msg) => {
+    const activeStation = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+    if (activeStation && msg.stationId === activeStation) {
+      appendMessageToUI(msg);
+    }
+  });
+}
+
+// 3. Helper to format a message row inside the YouTube layout container
+function appendMessageToUI(msg) {
+  if (!dom.chatMessages) return;
+  
+  const msgRow = document.createElement("div");
+  msgRow.className = "chat-message-row";
+  msgRow.innerHTML = `
+    <span class="chat-time">[${msg.timestamp || 'Live'}]</span>
+    <strong class="chat-user">${msg.username}:</strong> 
+    <span class="chat-body-text">${msg.text}</span>
+  `;
+  
+  dom.chatMessages.appendChild(msgRow);
+  dom.chatMessages.scrollTop = dom.chatMessages.scrollHeight; // Fast-scroll to latest text bubble
+}
+
+// 4. Input Listener Dispatches
+if (dom.chatSendBtn) dom.chatSendBtn.addEventListener("click", dispatchSocketMessage);
+if (dom.chatInput) {
+  dom.chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") dispatchSocketMessage();
+  });
+}
+
+// 5. Gather input payload values and dispatch up via the gateway engine
+function dispatchSocketMessage() {
+  const activeStation = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+  if (!activeStation || !dom.chatInput || !dom.chatInput.value.trim()) return;
+
+  if (socket) {
+    socket.emit('sendMessage', {
+      username: "Commuter_" + Math.floor(Math.random() * 900 + 100),
+      text: dom.chatInput.value.trim(),
+      stationId: activeStation
+    });
+  }
+
+  dom.chatInput.value = ""; // Zero-out the placeholder box field instantly
 }
