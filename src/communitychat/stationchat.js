@@ -1,6 +1,7 @@
 const ferryService = require("../services/ferryService");
 const db = require("./db");
 
+<<<<<<< HEAD
 const RAIN_WEATHER_ALERTS = [
   "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
   "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
@@ -81,6 +82,18 @@ function evaluateWeather(weatherData) {
   return { activeOrComing: false, type: null };
 }
 
+=======
+const SYSTEM_ALERTS = [
+  "Ferry arriving in 5 minutes.",
+  "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+  "Weather advisory: Mild river currents today. Standard speeds observed.",
+  "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+  "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+  "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+  "Notice: Please keep your lifevests secured for the duration of the trip."
+];
+
+>>>>>>> 1da9b672766b84b1e19438b2e443e2dcec4b7f2f
 function handleStationChat(io) {
   // Start the background system alerts generator
   startSystemAlerts(io);
@@ -128,6 +141,21 @@ function handleStationChat(io) {
       // Load existing message history from JSON DB
       let history = db.getStationHistory(currentRoom);
       
+<<<<<<< HEAD
+=======
+      // If history is empty, seed a welcome message so it is not blank
+      if (history.length === 0) {
+        const welcomeMsg = {
+          username: "SYSTEM ALERT",
+          text: `Welcome to the ${currentRoom} Community Board. Post updates or questions about ferry status here. Standard safety guidelines apply.`,
+          stationId: currentRoom,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isSystem: true
+        };
+        history = db.addMessage(currentRoom, welcomeMsg);
+      }
+      
+>>>>>>> 1da9b672766b84b1e19438b2e443e2dcec4b7f2f
       socket.emit('loadHistory', history);
     });
 
@@ -142,7 +170,11 @@ function handleStationChat(io) {
         username: displayName,
         text: msg.text,
         stationId: currentRoom,
+<<<<<<< HEAD
         timestamp: getFormattedTimestamp(),
+=======
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+>>>>>>> 1da9b672766b84b1e19438b2e443e2dcec4b7f2f
         isSystem: false
       };
 
@@ -159,6 +191,7 @@ function handleStationChat(io) {
   });
 }
 
+<<<<<<< HEAD
 // Emits weather system alerts to all stations if rain/storm is active/coming
 async function checkAndBroadcastWeatherAlert(io) {
   try {
@@ -185,10 +218,31 @@ async function checkAndBroadcastWeatherAlert(io) {
         text: alertText,
         stationId: stationName,
         timestamp: getFormattedTimestamp(),
+=======
+// Emits system alerts periodically to random stations to simulate real activity
+function startSystemAlerts(io) {
+  setInterval(() => {
+    try {
+      const stations = ferryService.listStations();
+      if (!stations || stations.length === 0) return;
+      
+      // Pick a random station
+      const randomStation = stations[Math.floor(Math.random() * stations.length)].name;
+      
+      // Pick a random system alert text
+      const alertText = SYSTEM_ALERTS[Math.floor(Math.random() * SYSTEM_ALERTS.length)];
+      
+      const structuredMessage = {
+        username: "SYSTEM ALERT",
+        text: alertText,
+        stationId: randomStation,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+>>>>>>> 1da9b672766b84b1e19438b2e443e2dcec4b7f2f
         isSystem: true
       };
       
       // Add to persistent database
+<<<<<<< HEAD
       db.addMessage(stationName, structuredMessage);
       
       // Broadcast to that station's room
@@ -208,6 +262,17 @@ function startSystemAlerts(io) {
   setInterval(() => {
     checkAndBroadcastWeatherAlert(io);
   }, 3600000);
+=======
+      db.addMessage(randomStation, structuredMessage);
+      
+      // Broadcast to that station's room
+      io.to(randomStation).emit('chatMessage', structuredMessage);
+      
+    } catch (err) {
+      console.error("Error generating background system alert:", err);
+    }
+  }, 45000); // Emits an alert every 45 seconds
+>>>>>>> 1da9b672766b84b1e19438b2e443e2dcec4b7f2f
 }
 
 module.exports = handleStationChat;
