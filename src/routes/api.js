@@ -15,6 +15,7 @@ router.get("/info", (_req, res) => {
 router.get("/stations", (_req, res) => {
   res.json({
     operational: ferryService.getOperationalInfo(),
+    route_order: ferryService.getRouteOrder(),
     stations: ferryService.listStations(),
   });
 });
@@ -126,8 +127,17 @@ router.get("/nearest-station", (req, res) => {
       });
     }
 
-    // Return the nearest station result
-    res.json(nearestStation);
+    const nextFerry = ferryService.getNextFerry(nearestStation.station);
+
+    // Return the nearest station result with the station's current service status.
+    res.json({
+      ...nearestStation,
+      status: nextFerry.next_ferry_time
+        ? `Next ferry at ${nextFerry.next_ferry_time}`
+        : nextFerry.message || "Status unavailable",
+      next_ferry_time: nextFerry.next_ferry_time || null,
+      minutes_from_now: nextFerry.minutes_from_now ?? null,
+    });
   } catch (error) {
     console.error("Error finding nearest station:", error);
     res.status(500).json({

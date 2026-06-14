@@ -7,6 +7,7 @@ const {
   parse24HourTime,
 } = require("../algorithms/timeTransform");
 const { findNextFerryIndex } = require("../algorithms/binarySearch");
+const { ROUTE_ORDER } = require("../constants/routeOrder");
 
 const DATA_PATH = path.join(__dirname, "../../data/schedules.json");
 
@@ -24,15 +25,18 @@ function loadSchedules() {
   operational = raw.operational || {};
   stations = {};
 
-  for (const [name, info] of Object.entries(raw.stations)) {
+  for (const name of ROUTE_ORDER) {
+    const info = raw.stations[name];
+    if (!info) continue;
+
     stations[name] = {
       city: info.city,
       address: info.address,
-      direction: info.direction,
       latitude: info.latitude,
       longitude: info.longitude,
       departures: info.departures,
       scheduleMinutes: transformSchedule(info.departures),
+      routeIndex: ROUTE_ORDER.indexOf(name),
     };
   }
 }
@@ -50,12 +54,16 @@ function getOperationalInfo() {
   return operational;
 }
 
+function getRouteOrder() {
+  return [...ROUTE_ORDER];
+}
+
 function listStations() {
-  return Object.keys(stations).map((name) => ({
+  return ROUTE_ORDER.filter((name) => stations[name]).map((name) => ({
     name,
     city: stations[name].city,
     address: stations[name].address,
-    direction: stations[name].direction,
+    route_index: stations[name].routeIndex,
   }));
 }
 
@@ -68,7 +76,7 @@ function getStationSchedule(stationName) {
     station: key,
     city: station.city,
     address: station.address,
-    direction: station.direction,
+    route_index: station.routeIndex,
     departures: station.departures,
     schedule_minutes: station.scheduleMinutes,
     schedule_24h: station.scheduleMinutes.map(minutesToTimeString),
@@ -105,7 +113,7 @@ function isServiceOpen(date = new Date()) {
 /**
  * Core pipeline: resolve current time -> binary search -> waiting time.
  * @param {string} stationName
- * @param {{ overrideMinutes?: number }} [options]
+ * @param {{ overrideMinutes?: number, date?: Date }} [options]
  */
 function getNextFerry(stationName, options = {}) {
   const key = normalizeStationKey(stationName);
@@ -159,6 +167,7 @@ module.exports = {
   getStationSchedule,
   getNextFerry,
   getOperationalInfo,
+  getRouteOrder,
   resolveCurrentMinutes,
   loadSchedules,
   getAllStations: () => stations,

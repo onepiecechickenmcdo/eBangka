@@ -103,9 +103,10 @@ body {
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
-  color: var(--accent-cyan);
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
   filter: drop-shadow(0 0 6px var(--accent-cyan-glow));
 }
 
@@ -259,43 +260,6 @@ body {
   border-color: var(--accent-cyan);
   box-shadow: 0 0 10px rgba(6, 182, 212, 0.25);
   background: rgba(15, 23, 42, 0.8);
-}
-
-.direction-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  background: rgba(8, 12, 20, 0.4);
-  padding: 4px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.dir-tab {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 8px 4px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  text-align: center;
-}
-
-.dir-tab:hover {
-  color: var(--text-main);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.dir-tab.active {
-  background: var(--accent-cyan);
-  color: #0c1524;
-}
-
-.tab-arrow {
-  font-weight: bold;
 }
 
 /* Starred Favorites Bar */
@@ -551,12 +515,16 @@ body {
   color: var(--text-dim);
 }
 
-.station-next-mini {
+.station-next-mini,
+.station-eta {
   color: var(--accent-teal);
   font-weight: 500;
+  line-height: 1.35;
+  text-wrap: pretty;
 }
 
-.station-next-mini.no-more {
+.station-next-mini.no-more,
+.station-eta.no-more {
   color: var(--text-dim);
 }
 
@@ -749,6 +717,8 @@ body {
 .countdown-desc {
   color: var(--text-muted);
   font-size: 0.85rem;
+  line-height: 1.4;
+  text-wrap: pretty;
 }
 
 /* Ferry Animation Pulsar */
@@ -905,7 +875,7 @@ input:checked + .slider:before {
 /* Time Machine Controls */
 .time-machine-controls {
   opacity: 1;
-  max-height: 150px;
+  max-height: 280px;
   overflow: hidden;
   transition:
     max-height 0.4s ease,
@@ -998,7 +968,9 @@ input:checked + .slider:before {
 .time-machine-hint {
   font-size: 0.75rem;
   color: var(--text-dim);
-  line-height: 1.4;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 /* ==========================================================================
@@ -1431,12 +1403,16 @@ input:checked + .slider:before {
 .btn-navigate,
 .btn-select {
   flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 12px;
   font-size: 0.8rem;
   font-weight: 600;
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  text-decoration: none;
   transition: var(--transition-fast);
 }
 
@@ -1464,6 +1440,38 @@ input:checked + .slider:before {
 .btn-select:hover {
   background: #00d4e4;
   transform: translateY(-1px);
+}
+
+.nearest-station-card {
+  gap: 14px;
+}
+
+.nearest-station-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.nearest-detail {
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.nearest-detail-label {
+  display: block;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.nearest-detail strong {
+  color: var(--text-main);
+  font-size: 0.85rem;
+  line-height: 1.35;
 }
 
 .location-error {
@@ -1496,60 +1504,13 @@ input:checked + .slider:before {
   }
 }
 
-/* ==========================================================================
-   Embedded Map Styles (Leaflet)
-   ========================================================================== */
-
-.location-map {
-  width: 100%;
-  height: 280px;
-  border-radius: 10px;
-  border: 1px solid rgba(6, 182, 212, 0.2);
-  overflow: hidden;
-  margin: 8px 0;
-  background: var(--bg-secondary);
-}
-
-.location-map-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(6, 182, 212, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(6, 182, 212, 0.1);
-}
-
-.distance-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: rgba(6, 182, 212, 0.15);
-  border-radius: 6px;
-  color: var(--accent-cyan);
-  font-weight: 600;
-  font-size: 0.85rem;
-  flex-shrink: 0;
-}
-
-.distance-badge svg {
-  width: 16px;
-  height: 16px;
-}
-
 .direction-hint {
   font-size: 0.8rem;
   color: var(--text-muted);
   margin: 0;
 }
 
-/* Mobile map adjustments */
 @media (max-width: 768px) {
-  .location-map {
-    height: 240px;
-  }
-
   .location-actions {
     flex-direction: column;
   }
@@ -1562,10 +1523,6 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 480px) {
-  .location-map {
-    height: 200px;
-  }
-
   .location-card {
     padding: 12px;
     gap: 10px;
@@ -1575,10 +1532,6 @@ input:checked + .slider:before {
     font-size: 1rem;
   }
 
-  .location-map-info {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 /* ==========================================================================
    Integrated Split-Panel Schedule & Chat Layout
@@ -1608,7 +1561,7 @@ input:checked + .slider:before {
     flex-direction: column;
     overflow: hidden;
     min-width: 0;
-    height: 220px; /* Locks the chat module safely inside her panel frame boundaries */
+    height: 320px;
 }
 
 /* 3. Internal Chat Styling Refinements */
@@ -1844,4 +1797,371 @@ input:checked + .slider:before {
 .chat-message-row.system-alert .chat-body-text {
     color: #fef08a;
     font-weight: 500;
+}
+
+/* ==========================================================================
+   Mobile Commuter Layout Refinements
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+button,
+input {
+  min-height: 44px;
+}
+
+.details-view,
+.sidebar,
+.station-meta-block,
+.hero-left,
+.schedule-grid-column,
+.integrated-chat-panel {
+  min-width: 0;
+}
+
+.brand-sub,
+.status-pill,
+.fare-badge,
+.station-name,
+.station-next-mini,
+#detail-station-name,
+#detail-station-address,
+.integrated-chat-header h4,
+#chat-station-subtitle,
+.username-picker-btn {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    padding: 16px;
+  }
+
+  .main-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .sidebar {
+    gap: 14px;
+  }
+
+  .route-map-section {
+    min-height: 340px;
+    max-height: 460px;
+  }
+
+  .schedule-chat-split-container {
+    flex-direction: column;
+  }
+
+  .integrated-chat-panel {
+    flex: none !important;
+    height: clamp(260px, 42vh, 360px);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .app-container {
+    padding: 10px;
+  }
+
+  .glass-panel,
+  .app-header,
+  .countdown-hero-card,
+  .card-panel,
+  .location-card,
+  .app-footer {
+    border-radius: 12px;
+  }
+
+  .app-header {
+    padding: 14px;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  .header-brand {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+  }
+
+  .time-machine-controls {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .time-machine-hint {
+    font-size: clamp(0.72rem, 3.2vw, 0.8rem);
+    line-height: 1.5;
+    margin-top: 4px;
+    padding-bottom: 2px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.45rem;
+  }
+
+  .brand-sub {
+    font-size: 0.75rem;
+  }
+
+  .header-status-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .status-pill,
+  .fare-badge {
+    justify-content: center;
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 0.74rem;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  .search-filter-section,
+  .favorites-section,
+  .route-map-section,
+  .active-station-panel,
+  .station-placeholder-panel {
+    padding: 14px;
+  }
+
+  .route-map-section {
+    min-height: auto;
+    max-height: none;
+  }
+
+  .route-container {
+    max-height: 360px;
+    padding-left: 18px;
+    padding-right: 2px;
+  }
+
+  .route-river-line {
+    left: 25px;
+  }
+
+  .timeline-item {
+    align-items: flex-start;
+    padding: 10px 0;
+  }
+
+  .node-dot {
+    margin-top: 4px;
+    margin-right: 12px;
+  }
+
+  .station-title-row,
+  .station-desc-row {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .station-title-row {
+    flex-direction: column;
+  }
+
+  .station-desc-row {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  .station-eta {
+    width: 100%;
+    font-size: clamp(0.68rem, 3.2vw, 0.75rem);
+    line-height: 1.35;
+    text-align: left;
+  }
+
+  .station-direction-badge {
+    width: fit-content;
+  }
+
+  .station-detail-header {
+    gap: 12px;
+  }
+
+  #detail-station-name {
+    font-size: 1.45rem;
+    line-height: 1.1;
+  }
+
+  .station-address-row {
+    align-items: flex-start;
+    line-height: 1.35;
+  }
+
+  .favorite-toggle-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .countdown-hero-card {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .countdown-time {
+    font-size: clamp(2.1rem, 13vw, 2.8rem) !important;
+    letter-spacing: 0;
+    word-break: keep-all;
+  }
+
+  .countdown-desc {
+    font-size: clamp(0.78rem, 3.4vw, 0.85rem);
+    line-height: 1.45;
+    max-width: 100%;
+  }
+
+  .countdown-label {
+    display: block;
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .ferry-pulsar {
+    width: 58px;
+    height: 58px;
+  }
+
+  .time-machine-header,
+  .control-row,
+  .picker-wrapper,
+  .chat-header-top,
+  .integrated-chat-footer,
+  .username-modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toggle-switch-wrapper {
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 6px;
+  }
+
+  .control-row {
+    gap: 8px;
+  }
+
+  #time-machine-picker,
+  #use-current-time-btn,
+  #chat-input,
+  #chat-send-btn,
+  .username-picker-btn,
+  .username-modal-actions .btn {
+    width: 100%;
+  }
+
+  .schedule-chat-split-container {
+    gap: 16px !important;
+    margin-top: 4px !important;
+  }
+
+  .schedule-section {
+    gap: 12px;
+  }
+
+  .schedule-legend {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .schedule-timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 300px;
+    gap: 8px;
+    padding-right: 2px;
+  }
+
+  .schedule-slot {
+    min-width: 0;
+    padding: 12px 8px;
+  }
+
+  .integrated-chat-panel {
+    height: 380px;
+  }
+
+  .integrated-chat-header {
+    padding: 12px;
+  }
+
+  .integrated-chat-header h4 {
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+
+  .username-picker-btn {
+    margin-top: 8px;
+    padding: 8px 10px;
+  }
+
+  .integrated-chat-footer {
+    gap: 8px;
+  }
+
+  #chat-input,
+  #chat-send-btn {
+    font-size: 0.9rem;
+    border-radius: 6px;
+  }
+
+  .station-placeholder-panel {
+    min-height: 260px;
+  }
+
+  .placeholder-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 16px;
+  }
+
+  .station-placeholder-panel h2 {
+    font-size: 1.45rem;
+  }
+
+  .app-footer {
+    padding: 16px 12px;
+  }
+
+  .route-map-section .section-header {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .direction-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .app-container {
+    padding: 8px;
+  }
+
+  .schedule-timeline-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 }
