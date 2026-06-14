@@ -77,26 +77,27 @@ function addMessage(stationId, message) {
 }
 
 // Get or create a unique username for a userId
+function normalizeUsername(username) {
+  return username.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 function getOrCreateUser(userId) {
   const db = loadDb();
   
-  // 1. Check if userId already has a username
   for (const [uname, uid] of Object.entries(db.users)) {
     if (uid === userId) {
       return uname;
     }
   }
   
-  // 2. Generate a new unique username
   let generatedUsername;
   let attempts = 0;
   do {
-    const randomSuffix = Math.floor(Math.random() * 9000 + 1000); // 4-digit random number
+    const randomSuffix = Math.floor(Math.random() * 9000 + 1000);
     generatedUsername = `Commuter_${randomSuffix}`;
     attempts++;
-  } while (db.users.hasOwnProperty(generatedUsername) && attempts < 100);
+  } while (Object.keys(db.users).some((name) => normalizeUsername(name) === normalizeUsername(generatedUsername)) && attempts < 100);
   
-  // 3. Save new user association
   db.users[generatedUsername] = userId;
   saveDb(db);
   
@@ -107,25 +108,24 @@ function getOrCreateUser(userId) {
 function claimUsername(userId, newUsername) {
   const db = loadDb();
   const cleanedName = newUsername.trim().substring(0, 15);
+  const normalizedName = normalizeUsername(cleanedName);
   
-  if (!cleanedName || cleanedName.toLowerCase() === "system alert" || cleanedName.toLowerCase() === "system") {
+  if (!cleanedName || normalizedName === "system alert" || normalizedName === "system") {
     return { success: false, error: "Invalid username." };
   }
   
-  // Check if username is already taken by a different user
-  const existingOwner = db.users[cleanedName];
-  if (existingOwner && existingOwner !== userId) {
-    return { success: false, error: "Username already taken." };
+  for (const [uname, uid] of Object.entries(db.users)) {
+    if (normalizeUsername(uname) === normalizedName && uid !== userId) {
+      return { success: false, error: "Username already taken." };
+    }
   }
   
-  // Delete any old usernames owned by this userId
   for (const [uname, uid] of Object.entries(db.users)) {
     if (uid === userId) {
       delete db.users[uname];
     }
   }
   
-  // Assign new username
   db.users[cleanedName] = userId;
   saveDb(db);
   

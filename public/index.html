@@ -186,8 +186,11 @@
               >
             </div>
             <div class="route-container">
-              <!-- Route line backing -->
-              <div class="route-river-line"></div>
+              <!-- Per-tab route lines -->
+              <div class="route-river-line route-river-line-all active" data-dir="all"></div>
+              <div class="route-river-line route-river-line-downstream" data-dir="downstream"></div>
+              <div class="route-river-line route-river-line-upstream" data-dir="upstream"></div>
+
               <!-- Dynamic station nodes -->
               <div id="stations-timeline" class="stations-timeline">
                 <div class="timeline-skeleton">Loading station map...</div>
@@ -385,6 +388,23 @@
                   <input type="text" id="chat-input" placeholder="Broadcast a live update..." autocomplete="off">
                   <button id="chat-send-btn">Send</button>
                 </div>
+
+                <form id="username-form" class="username-modal hidden" role="dialog" aria-modal="true" aria-labelledby="username-modal-title">
+                  <div class="username-modal-backdrop"></div>
+                  <div class="username-modal-content" role="document">
+                    <div class="username-modal-header">
+                      <h5 id="username-modal-title">Change display name</h5>
+                      <button type="button" id="username-cancel-btn" class="btn btn-icon username-cancel-btn" aria-label="Close username dialog">✕</button>
+                    </div>
+                    <p class="username-modal-copy">Choose a unique username that will appear with your messages.</p>
+                    <input id="username-input" type="text" maxlength="15" placeholder="Enter new username" autocomplete="off" />
+                    <p id="username-error-message" class="username-error-message hidden"></p>
+                    <div class="username-modal-actions">
+                      <button id="username-save-btn" type="submit" class="btn btn-sm">Save</button>
+                      <button type="button" class="btn btn-sm btn-secondary username-cancel-btn" id="username-cancel-secondary">Cancel</button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </section>

@@ -58,7 +58,11 @@ const dom = {
   chatInput: document.getElementById("chat-input"),
   chatSendBtn: document.getElementById("chat-send-btn"),
   usernamePickerBtn: document.getElementById("username-picker-btn"),
-  usernameDisplay: document.getElementById("username-display")
+  usernameDisplay: document.getElementById("username-display"),
+  usernameForm: document.getElementById("username-form"),
+  usernameInput: document.getElementById("username-input"),
+  usernameErrorMessage: document.getElementById("username-error-message"),
+  usernameCancelButtons: document.querySelectorAll(".username-cancel-btn")
 };
 
 // ==========================================================================
@@ -196,12 +200,10 @@ function setupEventListeners() {
       dom.directionTabs.forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
       filterAndRenderTimeline();
+      updateRouteLineForActiveTab();
     });
   });
-  
-  // Location-based nearest station button
-  dom.findNearestBtn.addEventListener("click", findNearestStation);
-  
+
   // Star icon click
   dom.favoriteToggleBtn.addEventListener("click", () => {
     if (state.selectedStation) {
@@ -254,9 +256,21 @@ function setupEventListeners() {
     fetchStations();
   });
 
-  // Username Picker Click
   if (dom.usernamePickerBtn) {
-    dom.usernamePickerBtn.addEventListener("click", promptChangeUsername);
+    dom.usernamePickerBtn.addEventListener("click", toggleUsernameForm);
+  }
+
+  if (dom.usernameForm) {
+    dom.usernameForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handleUsernameChange();
+    });
+  }
+
+  if (dom.usernameCancelButtons?.length) {
+    dom.usernameCancelButtons.forEach((btn) => {
+      btn.addEventListener("click", closeUsernameForm);
+    });
   }
 }
 
@@ -358,11 +372,13 @@ function filterAndRenderTimeline() {
   });
   
   renderTimelineHTML(filtered);
+  updateRouteLineForActiveTab();
 }
 
 function renderTimelineHTML(filteredStations) {
   if (filteredStations.length === 0) {
     dom.stationsTimeline.innerHTML = `<div class="timeline-skeleton">No matching stations found.</div>`;
+    updateRouteLineForActiveTab();
     return;
   }
   
@@ -400,6 +416,51 @@ function renderTimelineHTML(filteredStations) {
     item.addEventListener("click", () => selectStation(st.name));
     dom.stationsTimeline.appendChild(item);
   });
+  updateRouteLineForActiveTab();
+}
+
+function updateRouteLineForActiveTab() {
+  const activeTab = document.querySelector(".dir-tab.active");
+  const selectedDir = activeTab ? activeTab.getAttribute("data-dir") : "all";
+  const routeLines = document.querySelectorAll(".route-river-line");
+  const activeLine = document.querySelector(`.route-river-line[data-dir="${selectedDir}"]`);
+
+  routeLines.forEach(line => {
+    line.classList.toggle("active", line === activeLine);
+    if (line !== activeLine) {
+      line.style.height = "0";
+    }
+  });
+
+  if (!activeLine) return;
+  const routeContainer = dom.stationsTimeline.closest(".route-container");
+  if (!routeContainer) return;
+
+  const items = dom.stationsTimeline.querySelectorAll(".timeline-item");
+  if (items.length === 0) {
+    activeLine.style.top = "0";
+    activeLine.style.height = "0";
+    return;
+  }
+
+  const firstDot = items[0].querySelector(".node-dot");
+  const lastDot = items[items.length - 1].querySelector(".node-dot");
+  if (!firstDot || !lastDot) {
+    activeLine.style.top = "0";
+    activeLine.style.height = "0";
+    return;
+  }
+
+  const containerRect = routeContainer.getBoundingClientRect();
+  const firstRect = firstDot.getBoundingClientRect();
+  const lastRect = lastDot.getBoundingClientRect();
+
+  const topOffset = firstRect.top + firstRect.height / 2 - containerRect.top;
+  const bottomOffset = lastRect.top + lastRect.height / 2 - containerRect.top;
+  const heightValue = Math.max(bottomOffset - topOffset, 0);
+
+  activeLine.style.top = `${topOffset}px`;
+  activeLine.style.height = `${heightValue}px`;
 }
 
 // ==========================================================================
@@ -905,10 +966,65 @@ if (socket) {
       if (dom.usernameDisplay) {
         dom.usernameDisplay.textContent = result.username;
       }
+      closeUsernameForm();
     } else {
-      alert("Error: " + (result.error || "Could not change username."));
+      setUsernameError(result.error || "Could not change username.");
+      dom.usernameInput.focus();
     }
   });
+}
+
+function setUsernameError(message) {
+  if (!dom.usernameErrorMessage || !dom.usernameInput) return;
+  if (!message) {
+    dom.usernameErrorMessage.textContent = "";
+    dom.usernameErrorMessage.classList.add("hidden");
+    dom.usernameInput.classList.remove("invalid");
+    return;
+  }
+
+  dom.usernameErrorMessage.textContent = message;
+  dom.usernameErrorMessage.classList.remove("hidden");
+  dom.usernameInput.classList.add("invalid");
+}
+
+function toggleUsernameForm() {
+  if (!dom.usernameForm || !dom.usernameInput) return;
+  const isHidden = dom.usernameForm.classList.contains("hidden");
+  if (isHidden) {
+    const current = localStorage.getItem("ebangka_username") || "";
+    dom.usernameInput.value = current;
+    setUsernameError("");
+    dom.usernameForm.classList.remove("hidden");
+    dom.usernameInput.focus();
+  } else {
+    closeUsernameForm();
+  }
+}
+
+function closeUsernameForm() {
+  if (!dom.usernameForm) return;
+  dom.usernameForm.classList.add("hidden");
+  setUsernameError("");
+}
+
+function handleUsernameChange() {
+  if (!dom.usernameInput) return;
+  const nextUsername = dom.usernameInput.value.trim().substring(0, 15);
+  const current = localStorage.getItem("ebangka_username") || "";
+  if (!nextUsername || nextUsername === current) {
+    closeUsernameForm();
+    return;
+  }
+
+  const userId = localStorage.getItem("ebangka_userId");
+  if (!socket || !userId) {
+    setUsernameError("Unable to change username right now. Please refresh the page.");
+    return;
+  }
+
+  setUsernameError("");
+  socket.emit('changeUsername', { userId, newUsername: nextUsername });
 }
 
 // 3. Helper to format a message row inside the YouTube layout container
