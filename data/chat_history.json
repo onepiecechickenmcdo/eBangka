@@ -140,6 +140,20 @@
         "stationId": "Kalawaan",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Kalawaan",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Kalawaan",
+        "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "PUP": [
@@ -239,6 +253,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "PUP",
         "timestamp": "11:28 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "PUP",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "PUP",
+        "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -424,126 +452,19 @@
         "stationId": "Pinagbuhatan",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
-      }
-    ],
-    "Maybunga": [
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
-        "stationId": "Maybunga",
-        "timestamp": "07:07 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
-        "stationId": "Maybunga",
-        "timestamp": "07:17 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
-        "stationId": "Maybunga",
-        "timestamp": "07:26 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
-        "stationId": "Maybunga",
-        "timestamp": "07:32 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
-        "stationId": "Maybunga",
-        "timestamp": "07:34 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
-        "stationId": "Maybunga",
-        "timestamp": "07:49 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
-        "stationId": "Maybunga",
-        "timestamp": "08:04 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Weather advisory: Storm warning in the area. Ferry services may experience temporary boarding holds.",
-        "stationId": "Maybunga",
-        "timestamp": "08:06 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
-        "stationId": "Maybunga",
-        "timestamp": "08:33 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Ferry arriving in 5 minutes.",
-        "stationId": "Maybunga",
-        "timestamp": "08:41 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
-        "stationId": "Maybunga",
-        "timestamp": "08:43 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Ferry arriving in 5 minutes.",
-        "stationId": "Maybunga",
-        "timestamp": "08:47 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
-        "stationId": "Maybunga",
-        "timestamp": "08:50 PM | 6-14-2026",
-        "isSystem": true
       },
       {
         "username": "SYSTEM ALERT",
         "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
-        "stationId": "Maybunga",
-        "timestamp": "09:02 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
-        "stationId": "Maybunga",
-        "timestamp": "11:25 PM | 6-14-2026",
-        "isSystem": true
-      },
-      {
-        "username": "SYSTEM ALERT",
-        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
-        "stationId": "Maybunga",
-        "timestamp": "11:27 PM | 6-14-2026",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "01:51 AM | 6-15-2026",
         "isSystem": true
       },
       {
         "username": "SYSTEM ALERT",
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
-        "stationId": "Maybunga",
-        "timestamp": "11:28 PM | 6-14-2026",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -722,6 +643,20 @@
         "stationId": "San Joaquin",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "San Joaquin",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "San Joaquin",
+        "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Guadalupe": [
@@ -836,6 +771,20 @@
         "stationId": "Guadalupe",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Guadalupe",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Guadalupe",
+        "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Escolta": [
@@ -914,6 +863,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Escolta",
         "timestamp": "11:28 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Escolta",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Escolta",
+        "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -1007,6 +970,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Valenzuela",
         "timestamp": "11:28 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Valenzuela",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Valenzuela",
+        "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -1150,6 +1127,20 @@
         "stationId": "Lawton",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Lawton",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Lawton",
+        "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Sta. Ana": [
@@ -1256,6 +1247,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Sta. Ana",
         "timestamp": "11:28 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Sta. Ana",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Sta. Ana",
+        "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -1364,6 +1369,34 @@
         "stationId": "Quinta",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Quinta",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Quinta",
+        "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "superkei",
+        "text": "test test",
+        "stationId": "Quinta",
+        "timestamp": "02:09 AM | 6-15-2026",
+        "isSystem": false
+      },
+      {
+        "username": "superkei",
+        "text": "the ferry in guadalupe station is delayed",
+        "stationId": "Quinta",
+        "timestamp": "02:09 AM | 6-15-2026",
+        "isSystem": false
       }
     ],
     "Lambingan": [
@@ -1478,6 +1511,20 @@
         "stationId": "Lambingan",
         "timestamp": "11:28 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Lambingan",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Lambingan",
+        "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Hulo": [
@@ -1570,6 +1617,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Hulo",
         "timestamp": "11:28 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Hulo",
+        "timestamp": "01:51 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Hulo",
+        "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
       }
     ]

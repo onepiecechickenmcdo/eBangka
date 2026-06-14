@@ -120,7 +120,6 @@ function findNearestStation(userLat, userLon, stationsData) {
         longitude: stationInfo.longitude,
         address: stationInfo.address,
         city: stationInfo.city,
-        direction: stationInfo.direction,
       };
     }
   }

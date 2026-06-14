@@ -15,6 +15,7 @@ router.get("/info", (_req, res) => {
 router.get("/stations", (_req, res) => {
   res.json({
     operational: ferryService.getOperationalInfo(),
+    route_order: ferryService.getRouteOrder(),
     stations: ferryService.listStations(),
   });
 });

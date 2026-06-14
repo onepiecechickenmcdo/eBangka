@@ -103,9 +103,10 @@ body {
 }
 
 .logo-icon {
-  width: 36px;
-  height: 36px;
-  color: var(--accent-cyan);
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
   filter: drop-shadow(0 0 6px var(--accent-cyan-glow));
 }
 
@@ -514,12 +515,16 @@ body {
   color: var(--text-dim);
 }
 
-.station-next-mini {
+.station-next-mini,
+.station-eta {
   color: var(--accent-teal);
   font-weight: 500;
+  line-height: 1.35;
+  text-wrap: pretty;
 }
 
-.station-next-mini.no-more {
+.station-next-mini.no-more,
+.station-eta.no-more {
   color: var(--text-dim);
 }
 
@@ -712,6 +717,8 @@ body {
 .countdown-desc {
   color: var(--text-muted);
   font-size: 0.85rem;
+  line-height: 1.4;
+  text-wrap: pretty;
 }
 
 /* Ferry Animation Pulsar */
@@ -868,7 +875,7 @@ input:checked + .slider:before {
 /* Time Machine Controls */
 .time-machine-controls {
   opacity: 1;
-  max-height: 150px;
+  max-height: 280px;
   overflow: hidden;
   transition:
     max-height 0.4s ease,
@@ -961,7 +968,9 @@ input:checked + .slider:before {
 .time-machine-hint {
   font-size: 0.75rem;
   color: var(--text-dim);
-  line-height: 1.4;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 /* ==========================================================================
@@ -1884,9 +1893,21 @@ input {
   }
 
   .logo-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     flex: 0 0 auto;
+  }
+
+  .time-machine-controls {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .time-machine-hint {
+    font-size: clamp(0.72rem, 3.2vw, 0.8rem);
+    line-height: 1.5;
+    margin-top: 4px;
+    padding-bottom: 2px;
   }
 
   .brand-text h1 {
@@ -1958,7 +1979,16 @@ input {
 
   .station-desc-row {
     flex-direction: column;
+    align-items: flex-start;
     font-size: 0.75rem;
+    gap: 4px;
+  }
+
+  .station-eta {
+    width: 100%;
+    font-size: clamp(0.68rem, 3.2vw, 0.75rem);
+    line-height: 1.35;
+    text-align: left;
   }
 
   .station-direction-badge {
@@ -1992,6 +2022,13 @@ input {
   .countdown-time {
     font-size: clamp(2.1rem, 13vw, 2.8rem) !important;
     letter-spacing: 0;
+    word-break: keep-all;
+  }
+
+  .countdown-desc {
+    font-size: clamp(0.78rem, 3.4vw, 0.85rem);
+    line-height: 1.45;
+    max-width: 100%;
   }
 
   .countdown-label {

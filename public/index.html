@@ -31,21 +31,13 @@
       <!-- Top Header -->
       <header class="app-header">
         <div class="header-brand">
-          <!-- Logo SVG -->
-          <svg
+          <img
+            src="images/ebangka-logo.png"
+            alt="eBangka logo"
             class="logo-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              d="M2 17h20M2 20h20M5 14l2-8h10l2 8H5z"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path d="M12 2v4M9 3v1M15 3v1" stroke-linecap="round" />
-          </svg>
+            width="40"
+            height="40"
+          />
           <div class="brand-text">
             <h1>eBangka</h1>
             <p class="brand-sub">Pasig River Ferry schedule tracking</p>
@@ -94,59 +86,8 @@
 
       <!-- Main Content Area -->
       <div class="main-layout">
-        <!-- Sidebar Panel: Station Search & Route Map -->
+        <!-- Sidebar Panel: Route Timeline -->
         <aside class="sidebar">
-          <!-- Search & Direction Filters -->
-          <div class="search-filter-section glass-panel">
-            <div class="search-wrapper">
-              <svg
-                class="search-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-              <input
-                type="text"
-                id="station-search"
-                placeholder="Search stations, cities, cities..."
-                autocomplete="off"
-              />
-            </div>
-
-            <!-- Location-Based Nearest Station Button -->
-            <div class="location-section">
-              <button
-                id="find-nearest-btn"
-                class="btn btn-location"
-                title="Find nearest ferry station using your location"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="1"></circle>
-                  <path d="M12 1v6m0 6v6"></path>
-                  <path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path>
-                  <path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path>
-                </svg>
-                <span>Find Nearest Station</span>
-              </button>
-              <div id="location-result" class="location-result hidden">
-                <!-- Results will be shown here -->
-              </div>
-            </div>
-          </div>
-
           <!-- Favorites Bar (Hidden by default until stations are starred) -->
           <section
             id="favorites-section"
@@ -158,23 +99,18 @@
             </div>
           </section>
 
-          <!-- Vertical Route / Timeline Map -->
+          <!-- Vertical Route Timeline -->
           <section class="route-map-section glass-panel">
             <div class="section-header">
-              <h2>Route Timeline Map</h2>
-              <span
-                class="direction-hint"
-                title="Visual representation from Pasig (Pinagbuhatan) downstream to Manila (Escolta/Quinta)"
-                >East to West</span
-              >
+              <h2>Route Timeline</h2>
             </div>
             <div class="route-container">
               <!-- Route line -->
               <div class="route-river-line route-river-line-all active" data-dir="all"></div>
 
               <!-- Dynamic station nodes -->
-              <div id="stations-timeline" class="stations-timeline">
-                <div class="timeline-skeleton">Loading station map...</div>
+                <div id="stations-timeline" class="stations-timeline">
+                <div class="timeline-skeleton">Loading route timeline...</div>
               </div>
             </div>
           </section>
@@ -241,12 +177,12 @@
             <!-- Main countdown dashboard card -->
             <div class="countdown-hero-card">
               <div class="hero-left">
-                <span class="countdown-label">NEXT FERRY DEPARTURE</span>
+                <span class="countdown-label">FERRY ARRIVAL ETA</span>
                 <div id="countdown-timer-display" class="countdown-time">
                   15m 24s
                 </div>
                 <p id="countdown-secondary-info" class="countdown-desc">
-                  Estimated departure at 08:30 AM
+                  The ferry arrives in 15 minutes
                 </p>
               </div>
 

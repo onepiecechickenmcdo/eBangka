@@ -8,12 +8,14 @@ const socket = io(); // CHAT FIX: Safely instantiate the Socket engine link imme
 
 const state = {
   stations: [],
+  routeOrder: [],
   operationalInfo: {},
   selectedStation: null,
   simulatedTime: "08:00",
   timeMachineActive: false,
   favorites: [],
   tickerInterval: null,
+  etaTimelineInterval: null,
   refreshTimelineInterval: null
 };
 
@@ -21,16 +23,11 @@ const state = {
 const dom = {
   serviceStatusPill: document.getElementById("service-status-pill"),
   serviceStatusText: document.getElementById("service-status-text"),
-  stationSearch: document.getElementById("station-search"),
   favoritesSection: document.getElementById("favorites-section"),
   favoritesList: document.getElementById("favorites-list"),
   stationsTimeline: document.getElementById("stations-timeline"),
   activeStationPanel: document.getElementById("active-station-panel"),
   stationPlaceholderPanel: document.getElementById("station-placeholder-panel"),
-  
-  // Location Feature
-  findNearestBtn: document.getElementById("find-nearest-btn"),
-  locationResult: document.getElementById("location-result"),
   
   // Details pane
   detailStationCity: document.getElementById("detail-station-city"),
@@ -82,6 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   // Poll timeline info every 60s to refresh next-boat status
   state.refreshTimelineInterval = setInterval(fetchStations, 60000);
+  startTimelineEtaTicker();
 });
 
 // ==========================================================================
@@ -191,14 +189,7 @@ function initTimePicker() {
 // Event Handlers
 // ==========================================================================
 function setupEventListeners() {
-  // Search and tabs filter
-  dom.stationSearch.addEventListener("input", filterAndRenderTimeline);
-  
-  window.addEventListener("resize", updateRouteLineForActiveTab);
-
-  if (dom.findNearestBtn) {
-    dom.findNearestBtn.addEventListener("click", findNearestStation);
-  }
+  window.addEventListener("resize", updateRouteLine);
 
   // Star icon click
   dom.favoriteToggleBtn.addEventListener("click", () => {
@@ -315,8 +306,9 @@ async function fetchStations() {
   try {
     const res = await fetch("/stations");
     const data = await res.json();
+    state.routeOrder = data.route_order || [];
     
-    // Fetch count details for each station in parallel
+    // Fetch ETA details for each station in fixed route order
     const stationsWithNext = await Promise.all(
       data.stations.map(async (st) => {
         let url = `/next-ferry/${encodeURIComponent(st.name)}`;
@@ -330,16 +322,17 @@ async function fetchStations() {
           return {
             ...st,
             next_ferry_time: nextData.next_ferry_time || null,
+            minutes_from_now: nextData.minutes_from_now ?? null,
             message: nextData.message || null
           };
         } catch {
-          return { ...st, next_ferry_time: null, message: "Off-service" };
+          return { ...st, next_ferry_time: null, minutes_from_now: null, message: "Off-service" };
         }
       })
     );
     
     state.stations = stationsWithNext;
-    filterAndRenderTimeline();
+    renderTimeline();
   } catch (err) {
     console.error("Failed to load stations timeline:", err);
     dom.stationsTimeline.innerHTML = `<div class="timeline-skeleton" style="color:#ef4444;">Error connection to server.</div>`;
@@ -350,54 +343,80 @@ async function fetchStations() {
 // Render Timeline
 // ==========================================================================
 
-function filterAndRenderTimeline() {
-  const query = dom.stationSearch.value.toLowerCase().trim();
-  
-  const filtered = state.stations.filter(st => {
-    const nameMatch = st.name.toLowerCase().includes(query);
-    const cityMatch = st.city.toLowerCase().includes(query);
-    const addressMatch = st.address.toLowerCase().includes(query);
-    return nameMatch || cityMatch || addressMatch;
-  });
-  
-  renderTimelineHTML(filtered);
-  updateRouteLineForActiveTab();
+function formatDurationMinutes(totalMinutes) {
+  if (totalMinutes <= 0) return "0 minutes";
+  if (totalMinutes <= 59) {
+    return totalMinutes === 1 ? "1 minute" : `${totalMinutes} minutes`;
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
+  const hourPart = hours === 1 ? "1 hour" : `${hours} hours`;
+
+  if (mins === 0) return hourPart;
+  const minPart = mins === 1 ? "1 min" : `${mins} min`;
+  return `${hourPart} and ${minPart}`;
 }
 
-function renderTimelineHTML(filteredStations) {
-  if (filteredStations.length === 0) {
-    dom.stationsTimeline.innerHTML = `<div class="timeline-skeleton">No matching stations found.</div>`;
-    updateRouteLineForActiveTab();
+function formatCompactDuration(totalMinutes) {
+  if (totalMinutes <= 60) {
+    return formatDurationMinutes(totalMinutes);
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = totalMinutes % 60;
+  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+}
+
+function formatArrivalEta(minutesFromNow, message, nextFerryTime) {
+  if (nextFerryTime && minutesFromNow != null) {
+    if (minutesFromNow <= 0) {
+      return "The ferry is arriving now";
+    }
+    return `The ferry arrives in ${formatDurationMinutes(minutesFromNow)}`;
+  }
+  if (message) return message;
+  return "No remaining departures";
+}
+
+function renderTimeline() {
+  const orderedStations = state.stations.length > 0
+    ? state.stations
+    : [];
+
+  renderTimelineHTML(orderedStations);
+  updateRouteLine();
+}
+
+function renderTimelineHTML(stations) {
+  if (stations.length === 0) {
+    dom.stationsTimeline.innerHTML = `<div class="timeline-skeleton">No stations available.</div>`;
+    updateRouteLine();
     return;
   }
   
   dom.stationsTimeline.innerHTML = "";
   
-  filteredStations.forEach(st => {
+  stations.forEach(st => {
     const item = document.createElement("div");
     item.className = "timeline-item";
+    item.dataset.stationName = st.name;
     if (state.selectedStation && state.selectedStation.station === st.name) {
       item.classList.add("active");
     }
     
-    // Status text
-    let statusTextStr = "No remaining departures";
-    if (st.next_ferry_time) {
-      statusTextStr = `Next trip: ${format12h(st.next_ferry_time)}`;
-    } else if (st.message) {
-      statusTextStr = st.message;
-    }
+    const etaText = formatArrivalEta(st.minutes_from_now, st.message, st.next_ferry_time);
+    const hasEta = Boolean(st.next_ferry_time && st.minutes_from_now != null);
     
     item.innerHTML = `
       <div class="node-dot"></div>
       <div class="timeline-content">
         <div class="station-title-row">
           <span class="station-name">${st.name}</span>
-          <span class="station-direction-badge dir-${st.direction}">${st.direction}</span>
         </div>
         <div class="station-desc-row">
           <span class="station-city">${st.city}</span>
-          <span class="station-next-mini ${!st.next_ferry_time ? 'no-more' : ''}">${statusTextStr}</span>
+          <span class="station-eta ${hasEta ? '' : 'no-more'}" data-next-time="${st.next_ferry_time || ''}">${etaText}</span>
         </div>
       </div>
     `;
@@ -405,10 +424,48 @@ function renderTimelineHTML(filteredStations) {
     item.addEventListener("click", () => selectStation(st.name));
     dom.stationsTimeline.appendChild(item);
   });
-  updateRouteLineForActiveTab();
+  updateRouteLine();
 }
 
-function updateRouteLineForActiveTab() {
+function startTimelineEtaTicker() {
+  if (state.etaTimelineInterval) clearInterval(state.etaTimelineInterval);
+
+  state.etaTimelineInterval = setInterval(() => {
+    if (state.timeMachineActive) return;
+
+    state.stations.forEach(st => {
+      if (!st.next_ferry_time) return;
+      const remaining = computeMinutesUntil(st.next_ferry_time);
+      st.minutes_from_now = remaining;
+    });
+
+    dom.stationsTimeline.querySelectorAll(".timeline-item").forEach(item => {
+      const name = item.dataset.stationName;
+      const station = state.stations.find(s => s.name === name);
+      if (!station) return;
+
+      const etaEl = item.querySelector(".station-eta");
+      if (!etaEl) return;
+
+      const etaText = formatArrivalEta(
+        station.minutes_from_now,
+        station.message,
+        station.next_ferry_time
+      );
+      etaEl.textContent = etaText;
+      etaEl.classList.toggle("no-more", !(station.next_ferry_time && station.minutes_from_now != null));
+    });
+  }, 30000);
+}
+
+function computeMinutesUntil(time24) {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const targetMinutes = parseTimeStringToMinutes(time24);
+  return targetMinutes - currentMinutes;
+}
+
+function updateRouteLine() {
   const routeLines = document.querySelectorAll(".route-river-line");
   const activeLine = document.querySelector('.route-river-line[data-dir="all"]');
 
@@ -590,23 +647,21 @@ function startCountdown(nextFerryData) {
   }
   
   timerEl.style.fontSize = "3rem";
-  const targetTimeStr = nextFerryData.next_ferry_time; // HH:MM in 24h
+  const targetTimeStr = nextFerryData.next_ferry_time;
   const targetMinutes = parseTimeStringToMinutes(targetTimeStr);
   
-  // If time machine is enabled, don't tick down seconds; it's a frozen simulated point
   if (state.timeMachineActive) {
     const diffMinutes = nextFerryData.minutes_from_now;
     if (diffMinutes < 0) {
       timerEl.textContent = "Departed";
-      descEl.textContent = `Scheduled at ${format12h(targetTimeStr)}`;
+      descEl.textContent = "The ferry has departed";
     } else {
-      timerEl.textContent = `${diffMinutes}m`;
-      descEl.textContent = `Scheduled departure at ${format12h(targetTimeStr)} (${diffMinutes} mins remaining from simulated time)`;
+      timerEl.textContent = formatCompactDuration(diffMinutes);
+      descEl.textContent = `${formatArrivalEta(diffMinutes, null, targetTimeStr)} (simulated)`;
     }
     return;
   }
   
-  // Live Ticker logic
   const updateTimer = () => {
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -617,9 +672,8 @@ function startCountdown(nextFerryData) {
     if (totalRemainingSeconds <= 0) {
       clearInterval(state.tickerInterval);
       timerEl.textContent = "00m 00s";
-      descEl.textContent = "Ferry is boarding / departed. Refreshing schedule...";
+      descEl.textContent = "The ferry is arriving now";
       
-      // Auto refresh next boat after 2 seconds
       setTimeout(() => {
         refreshActiveStationData();
         fetchStations();
@@ -627,11 +681,10 @@ function startCountdown(nextFerryData) {
       return;
     }
     
-    const mins = Math.floor(totalRemainingSeconds / 60);
-    const secs = totalRemainingSeconds % 60;
-    
-    timerEl.textContent = `${String(mins).padStart(2, "0")}m ${String(secs).padStart(2, "0")}s`;
-    descEl.textContent = `Next ferry departure scheduled at ${format12h(targetTimeStr)}`;
+    const totalMins = Math.floor(totalRemainingSeconds / 60);
+
+    timerEl.textContent = formatCompactDuration(totalMins);
+    descEl.textContent = formatArrivalEta(totalMins, null, targetTimeStr);
   };
   
   // Initial draw and run ticker
@@ -680,200 +733,6 @@ function format12h(time24) {
   return `${h}:${m} ${ampm}`;
 }
 
-// ==========================================================================
-// Location-Based Feature: Find Nearest Ferry Station
-// ==========================================================================
-
-/**
- * Request user's geolocation and find the nearest ferry station
- * Uses browser Geolocation API (requests user permission)
- * Calls backend /nearest-station endpoint with user coordinates
- * 
- * Algorithm Flow:
- * 1. Request user permission via navigator.geolocation.getCurrentPosition
- * 2. Send lat/lng to backend /nearest-station?lat=X&lng=Y
- * 3. Backend uses Haversine formula to find nearest station (O(n) = 13 stations)
- * 4. Display result with distance and navigation link
- */
-async function findNearestStation() {
-  // Show loading state
-  dom.findNearestBtn.disabled = true;
-  dom.findNearestBtn.innerHTML = '<span>Getting location...</span>';
-  dom.locationResult.classList.add("hidden");
-
-  // Request user's current location
-  // This triggers browser permission prompt
-  if (!navigator.geolocation) {
-    showLocationError("Geolocation not supported by this browser");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => handleLocationSuccess(position),
-    (error) => handleLocationError(error)
-  );
-}
-
-/**
- * Handle successful geolocation retrieval
- * @param {GeolocationPosition} position - Contains coords with latitude and longitude
- */
-async function handleLocationSuccess(position) {
-  const { latitude, longitude } = position.coords;
-  
-  try {
-    // Call backend endpoint to find nearest station using Haversine
-    const url = `/nearest-station?lat=${latitude}&lng=${longitude}`;
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error("Failed to find nearest station");
-    }
-    
-    const nearestStationData = await response.json();
-    displayNearestStationResult(nearestStationData, latitude, longitude);
-    
-  } catch (err) {
-    showLocationError(`Error finding nearest station: ${err.message}`);
-  } finally {
-    // Reset button state
-    dom.findNearestBtn.disabled = false;
-    dom.findNearestBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path><path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path></svg><span>Find Nearest Station</span>';
-  }
-}
-
-/**
- * Handle geolocation errors (permission denied, location unavailable, etc.)
- * @param {GeolocationPositionError} error
- */
-function handleLocationError(error) {
-  let errorMsg = "Unable to get your location";
-  
-  switch (error.code) {
-    case error.PERMISSION_DENIED:
-      errorMsg = "Location permission denied. Enable location access in browser settings.";
-      break;
-    case error.POSITION_UNAVAILABLE:
-      errorMsg = "Location information is not available.";
-      break;
-    case error.TIMEOUT:
-      errorMsg = "Location request timed out.";
-      break;
-  }
-  
-  showLocationError(errorMsg);
-}
-
-/**
- * Display nearest station result with external navigation options.
- * @param {Object} stationData - Contains station, distance, latitude, longitude, address, and status
- * @param {number} userLat - User's latitude
- * @param {number} userLon - User's longitude
- */
-function displayNearestStationResult(stationData, userLat, userLon) {
-  const {
-    station,
-    distance,
-    latitude: stationLat,
-    longitude: stationLon,
-    address,
-    city,
-    status,
-  } = stationData;
-
-  const distanceStr = formatDistance(distance);
-  const navigationLinks = buildNavigationLinks(userLat, userLon, stationLat, stationLon);
-  const primaryLink = getPrimaryNavigationLink(navigationLinks);
-
-  dom.locationResult.innerHTML = `
-    <div class="location-card nearest-station-card">
-      <div class="location-status">
-        <svg class="location-check" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/>
-          <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="status-text">Nearest Ferry Station</span>
-      </div>
-
-      <div class="nearest-station-info">
-        <h4 class="station-name">${station}</h4>
-        <p class="station-meta">${city} - ${distanceStr} away</p>
-        <p class="station-address">${address}</p>
-      </div>
-
-      <div class="nearest-station-details" aria-label="Nearest station details">
-        <div class="nearest-detail">
-          <span class="nearest-detail-label">Station status</span>
-          <strong>${status || "Status unavailable"}</strong>
-        </div>
-      </div>
-
-      <div class="location-actions">
-        <a class="btn btn-navigate" href="${primaryLink.href}" target="_blank" rel="noopener noreferrer">
-          Get Directions
-        </a>
-        <button class="btn btn-select" type="button" data-station-name="${station}">
-          View Schedule
-        </button>
-      </div>
-    </div>
-  `;
-
-  const selectButton = dom.locationResult.querySelector("[data-station-name]");
-  if (selectButton) {
-    selectButton.addEventListener("click", () => selectStation(station));
-  }
-
-  dom.locationResult.classList.remove("hidden");
-}
-
-function formatDistance(distanceKm) {
-  return distanceKm < 1
-    ? `${Math.round(distanceKm * 1000)} meters`
-    : `${distanceKm.toFixed(2)} km`;
-}
-
-function buildNavigationLinks(userLat, userLon, stationLat, stationLon) {
-  const origin = `${userLat},${userLon}`;
-  const destination = `${stationLat},${stationLon}`;
-
-  return {
-    google: `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=walking`,
-    waze: `https://waze.com/ul?ll=${encodeURIComponent(destination)}&navigate=yes`,
-    apple: `https://maps.apple.com/?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}&dirflg=w`,
-  };
-}
-
-function getPrimaryNavigationLink(navigationLinks) {
-  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  return {
-    label: isiOS ? "Apple Maps" : "Google Maps",
-    href: isiOS ? navigationLinks.apple : navigationLinks.google,
-  };
-}
-
-/**
- * Show location error message to user
- * @param {string} message - Error message to display
- */
-function showLocationError(message) {
-  dom.locationResult.innerHTML = `
-    <div class="location-error">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <path d="M12 8v5" stroke-linecap="round"></path>
-        <circle cx="12" cy="17.5" r="1" fill="currentColor"></circle>
-      </svg>
-      <p>${message}</p>
-    </div>
-  `;
-  
-  dom.locationResult.classList.remove("hidden");
-  
-  // Reset button state
-  dom.findNearestBtn.disabled = false;
-  dom.findNearestBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M12 1v6m0 6v6"></path><path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path><path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path></svg><span>Find Nearest Station</span>';
-}
 // ==========================================================================
 // Twitch/YouTube Style Sidebar Chat Event Core Logic
 // ==========================================================================
