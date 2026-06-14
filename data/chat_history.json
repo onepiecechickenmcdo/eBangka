@@ -1,0 +1,223 @@
+{
+  "messages": {
+    "PUP": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "PUP",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Escolta": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Escolta",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "San Joaquin": [
+      {
+        "username": "Commuter_275",
+        "text": "hey",
+        "stationId": "San Joaquin",
+        "timestamp": "09:30 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "San Joaquin",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "Commuter_8746",
+        "text": "test",
+        "stationId": "San Joaquin",
+        "timestamp": "03:15 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_8746",
+        "text": "hey",
+        "stationId": "San Joaquin",
+        "timestamp": "03:15 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "uga",
+        "text": "test",
+        "stationId": "San Joaquin",
+        "timestamp": "03:16 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "mr sailor",
+        "text": "nanjasn nmasba boayt",
+        "stationId": "San Joaquin",
+        "timestamp": "03:16 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "mr monkey man",
+        "text": "oo",
+        "stationId": "San Joaquin",
+        "timestamp": "03:16 PM | 6-14-2026",
+        "isSystem": false
+      }
+    ],
+    "Sta. Ana": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Sta. Ana",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Quinta": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Quinta",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Hulo": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Hulo",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Maybunga": [
+      {
+        "username": "Commuter_3995",
+        "text": "test",
+        "stationId": "Maybunga",
+        "timestamp": "09:41 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_3995",
+        "text": "test",
+        "stationId": "Maybunga",
+        "timestamp": "09:41 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Maybunga",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Guadalupe": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Guadalupe",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Pinagbuhatan": [
+      {
+        "username": "Commuter_3995",
+        "text": "test",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "09:37 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_3995",
+        "text": "test",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "09:37 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_3995",
+        "text": "test test",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "09:41 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_8746",
+        "text": "uga buga",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "02:58 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_8746",
+        "text": "test",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "03:05 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Lambingan": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Lambingan",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Kalawaan": [
+      {
+        "username": "Commuter_8746",
+        "text": "test",
+        "stationId": "Kalawaan",
+        "timestamp": "03:01 PM | 6-14-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Kalawaan",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Valenzuela": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Valenzuela",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ],
+    "Lawton": [
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
+        "stationId": "Lawton",
+        "timestamp": "03:14 PM | 6-14-2026",
+        "isSystem": true
+      }
+    ]
+  },
+  "users": {
+    "Commuter_3995": "uid_tkyhllqtgxhk0x34rt8wdh",
+    "mr monkey man": "uid_u99gt2ntdde0onv7fjjzkol"
+  }
+}
