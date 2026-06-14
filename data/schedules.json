@@ -22,8 +22,8 @@
     "Pinagbuhatan": {
       "city": "Pasig City",
       "address": "Eusebio Avenue, Pinagbuhatan, Pasig City (near the Coast Guard Station at C6 Bridge)",
-      "latitude": 14.5797,
-      "longitude": 121.0576,
+      "latitude": 14.545952314352537,
+      "longitude": 121.09437742461766,
       "direction": "downstream",
       "departures": [
         "7:00 AM",
@@ -36,45 +36,11 @@
         "4:00 PM"
       ]
     },
-    "San Joaquin": {
-      "city": "Pasig City",
-      "address": "San Bernardo Street, San Joaquin, Pasig City",
-      "latitude": 14.5831,
-      "longitude": 121.0643,
-      "direction": "downstream",
-      "departures": [
-        "7:10 AM",
-        "7:40 AM",
-        "8:40 AM",
-        "9:40 AM",
-        "11:10 AM",
-        "12:40 PM",
-        "2:10 PM",
-        "4:10 PM"
-      ]
-    },
-    "Maybunga": {
-      "city": "Pasig City",
-      "address": "Maybunga, Pasig City",
-      "latitude": 14.5876,
-      "longitude": 121.0711,
-      "direction": "downstream",
-      "departures": [
-        "7:12 AM",
-        "7:42 AM",
-        "8:42 AM",
-        "9:42 AM",
-        "11:12 AM",
-        "12:42 PM",
-        "2:12 PM",
-        "4:12 PM"
-      ]
-    },
     "Kalawaan": {
       "city": "Pasig City",
       "address": "Kalawaan, Pasig City",
-      "latitude": 14.5921,
-      "longitude": 121.0779,
+      "latitude": 14.553184449649448,
+      "longitude": 121.08213962234368,
       "direction": "downstream",
       "departures": [
         "7:15 AM",
@@ -87,11 +53,28 @@
         "4:15 PM"
       ]
     },
+    "San Joaquin": {
+      "city": "Pasig City",
+      "address": "San Bernardo Street, San Joaquin, Pasig City",
+      "latitude": 14.55469449864208,
+      "longitude": 121.07384670257903,
+      "direction": "downstream",
+      "departures": [
+        "7:10 AM",
+        "7:40 AM",
+        "8:40 AM",
+        "9:40 AM",
+        "11:10 AM",
+        "12:40 PM",
+        "2:10 PM",
+        "4:10 PM"
+      ]
+    },
     "Guadalupe": {
       "city": "Makati City",
       "address": "Guadalupe, Makati City",
-      "latitude": 14.5671,
-      "longitude": 121.0453,
+      "latitude": 14.568031517140009,
+      "longitude": 121.04790517863088,
       "direction": "downstream",
       "departures": [
         "7:00 AM",
@@ -110,8 +93,8 @@
     "Valenzuela": {
       "city": "Makati City",
       "address": "A. Bonifacio Street, Valenzuela, Makati City",
-      "latitude": 14.5619,
-      "longitude": 121.0385,
+      "latitude": 14.574012562591292,
+      "longitude": 121.02579304750938,
       "direction": "downstream",
       "departures": [
         "7:08 AM",
@@ -130,8 +113,8 @@
     "Hulo": {
       "city": "Mandaluyong City",
       "address": "Hulo, Mandaluyong City",
-      "latitude": 14.5567,
-      "longitude": 121.0317,
+      "latitude": 14.568104204431442,
+      "longitude": 121.03376457270069,
       "direction": "downstream",
       "departures": [
         "7:20 AM",
@@ -150,8 +133,8 @@
     "Lambingan": {
       "city": "Manila City",
       "address": "Lambingan, Manila City",
-      "latitude": 14.5521,
-      "longitude": 121.0249,
+      "latitude": 14.58737895397497,
+      "longitude": 121.01841708477589,
       "direction": "downstream",
       "departures": [
         "7:30 AM",
@@ -170,8 +153,8 @@
     "Sta. Ana": {
       "city": "Manila City",
       "address": "Sta. Ana, Manila City",
-      "latitude": 14.5475,
-      "longitude": 121.0181,
+      "latitude": 14.58230964915956,
+      "longitude": 121.0116107217073,
       "direction": "downstream",
       "departures": [
         "7:35 AM",
@@ -190,8 +173,8 @@
     "PUP": {
       "city": "Manila City",
       "address": "Polytechnic University of the Philippines, Manila City",
-      "latitude": 14.5429,
-      "longitude": 121.0113,
+      "latitude": 14.596051505375295,
+      "longitude": 121.0107650725705,
       "direction": "downstream",
       "departures": [
         "7:40 AM",
@@ -207,11 +190,32 @@
         "5:10 PM"
       ]
     },
+    "Quinta": {
+      "city": "Manila City",
+      "address": "Quinta, Manila City",
+      "latitude": 14.596077584587952,
+      "longitude": 120.98231390367737,
+      "direction": "upstream",
+      "departures": [
+        "8:45 AM",
+        "9:15 AM",
+        "10:15 AM",
+        "11:15 AM",
+        "12:15 PM",
+        "1:15 PM",
+        "2:15 PM",
+        "3:15 PM",
+        "4:15 PM",
+        "5:15 PM",
+        "5:45 PM",
+        "6:30 PM"
+      ]
+    },
     "Lawton": {
       "city": "Manila City",
       "address": "Lawton, Manila City",
-      "latitude": 14.5383,
-      "longitude": 121.0045,
+      "latitude": 14.595699241638721,
+      "longitude": 120.98134973524432,
       "direction": "downstream",
       "departures": [
         "7:50 AM",
@@ -230,8 +234,8 @@
     "Escolta": {
       "city": "Manila City",
       "address": "Escolta, Manila City",
-      "latitude": 14.5337,
-      "longitude": 120.9977,
+      "latitude": 14.596569707451849,
+      "longitude": 120.977598645641,
       "direction": "upstream",
       "departures": [
         "8:30 AM",
@@ -245,27 +249,6 @@
         "4:00 PM",
         "5:00 PM",
         "5:30 PM",
-        "6:30 PM"
-      ]
-    },
-    "Quinta": {
-      "city": "Manila City",
-      "address": "Quinta, Manila City",
-      "latitude": 14.5291,
-      "longitude": 120.9909,
-      "direction": "upstream",
-      "departures": [
-        "8:45 AM",
-        "9:15 AM",
-        "10:15 AM",
-        "11:15 AM",
-        "12:15 PM",
-        "1:15 PM",
-        "2:15 PM",
-        "3:15 PM",
-        "4:15 PM",
-        "5:15 PM",
-        "5:45 PM",
         "6:30 PM"
       ]
     }

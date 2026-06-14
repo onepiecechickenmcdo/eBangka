@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      eBangka — Pasig River Ferry Schedule Tracking & Next-Trip Predictor
+      eBangka - Pasig River Ferry Schedule Tracking & Next-Trip Predictor
     </title>
     <meta
       name="description"
@@ -18,17 +18,6 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Leaflet Map Library (for embedded maps) -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-
-    <!-- Leaflet Routing Machine (for route calculation) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="css/style.css" />
@@ -150,21 +139,10 @@
                   <path d="M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24"></path>
                   <path d="M19.78 4.22l-4.24 4.24m0 5.08l4.24 4.24"></path>
                 </svg>
-                <span>My Location</span>
+                <span>Find Nearest Station</span>
               </button>
               <div id="location-result" class="location-result hidden">
                 <!-- Results will be shown here -->
-              </div>
-            </div>
-
-            <div class="direction-tabs">
-              <div class="direction-tabs-row direction-tabs-row-top">
-                <button class="dir-tab active" data-dir="all">All</button>
-              </div>
-              <div class="direction-tabs-row direction-tabs-row-bottom">
-                <button class="dir-tab" data-dir="pasig">Pasig</button>
-                <button class="dir-tab" data-dir="mandaluyong-makati">Mandaluyong / Makati</button>
-                <button class="dir-tab" data-dir="manila">Manila</button>
               </div>
             </div>
           </div>
@@ -191,11 +169,8 @@
               >
             </div>
             <div class="route-container">
-              <!-- Per-tab route lines -->
+              <!-- Route line -->
               <div class="route-river-line route-river-line-all active" data-dir="all"></div>
-              <div class="route-river-line route-river-line-pasig" data-dir="pasig"></div>
-              <div class="route-river-line route-river-line-mandaluyong-makati" data-dir="mandaluyong-makati"></div>
-              <div class="route-river-line route-river-line-manila" data-dir="manila"></div>
 
               <!-- Dynamic station nodes -->
               <div id="stations-timeline" class="stations-timeline">
@@ -380,9 +355,9 @@
               <div class="integrated-chat-panel">
                 <div class="integrated-chat-header">
                   <div class="chat-header-top">
-                    <h4>💬 Station Live Community Board</h4>
+                    <h4>Station Live Community Board</h4>
                     <button id="username-picker-btn" class="username-picker-btn" title="Change Username">
-                      👤 <span id="username-display">Commuter</span>
+                      <span id="username-display">Commuter</span>
                     </button>
                   </div>
                   <span id="chat-station-subtitle">Select a station to synchronize chat logs</span>
@@ -400,7 +375,7 @@
                   <div class="username-modal-content" role="document">
                     <div class="username-modal-header">
                       <h5 id="username-modal-title">Change display name</h5>
-                      <button type="button" id="username-cancel-btn" class="btn btn-icon username-cancel-btn" aria-label="Close username dialog">✕</button>
+                      <button type="button" id="username-cancel-btn" class="btn btn-icon username-cancel-btn" aria-label="Close username dialog">x</button>
                     </div>
                     <p class="username-modal-copy">Choose a unique username that will appear with your messages.</p>
                     <input id="username-input" type="text" maxlength="15" placeholder="Enter new username" autocomplete="off" />
@@ -449,7 +424,7 @@
 <footer class="app-footer">
         <div class="footer-info">
           <p>
-            <strong>eBangka Dashboard</strong> • Powered by Express API & static MMDA schedules
+            <strong>eBangka Dashboard</strong> - Powered by Express API & static MMDA schedules
           </p>
           <p class="tech-stack-details">
             Algorithms: <span>Transform & Conquer (Schedule Sort)</span> &bull;
