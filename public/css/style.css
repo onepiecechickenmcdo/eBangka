@@ -263,11 +263,27 @@ body {
 
 .direction-tabs {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+  gap: 8px;
   background: rgba(8, 12, 20, 0.4);
-  padding: 4px;
+  padding: 8px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.direction-tabs-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.direction-tabs-row-top {
+  justify-content: center;
+}
+
+.direction-tabs-row-bottom {
+  justify-content: space-between;
 }
 
 .dir-tab {
@@ -277,11 +293,23 @@ body {
   font-family: var(--font-body);
   font-size: 0.8rem;
   font-weight: 600;
-  padding: 8px 4px;
+  padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: var(--transition-fast);
   text-align: center;
+  min-width: 100px;
+  flex: 1 1 120px;
+}
+
+@media (max-width: 720px) {
+  .direction-tabs-row-bottom {
+    justify-content: center;
+  }
+
+  .direction-tabs-row-bottom .dir-tab {
+    flex: 1 1 140px;
+  }
 }
 
 .dir-tab:hover {
@@ -1422,10 +1450,50 @@ input:checked + .slider:before {
   word-break: break-word;
 }
 
+.route-type-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.route-tab {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 6px;
+  background: rgba(6, 182, 212, 0.08);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.route-tab:hover {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.5);
+}
+
+.route-tab.active {
+  background: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  color: var(--bg-primary);
+  font-weight: 600;
+}
+
 .location-actions {
   display: flex;
   gap: 8px;
   margin-top: 4px;
+}
+
+/* Hide Leaflet Routing Machine control panel */
+.leaflet-routing-container {
+  display: none !important;
+}
+
+.leaflet-routing-alt {
+  display: none !important;
 }
 
 .btn-navigate,

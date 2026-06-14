@@ -91,6 +91,27 @@
         "stationId": "Kalawaan",
         "timestamp": "08:11 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Kalawaan",
+        "timestamp": "08:17 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Kalawaan",
+        "timestamp": "08:24 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Kalawaan",
+        "timestamp": "08:44 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "PUP": [
@@ -141,6 +162,27 @@
         "text": "Weather advisory: Storm warning in the area. Ferry services may experience temporary boarding holds.",
         "stationId": "PUP",
         "timestamp": "08:06 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "PUP",
+        "timestamp": "08:14 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
+        "stationId": "PUP",
+        "timestamp": "08:17 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "PUP",
+        "timestamp": "08:32 PM | 6-14-2026",
         "isSystem": true
       }
     ],
@@ -235,6 +277,69 @@
         "stationId": "Pinagbuhatan",
         "timestamp": "08:10 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:12 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:16 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:18 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:20 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:26 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:32 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:46 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:47 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "08:50 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "Maybunga": [
@@ -292,6 +397,41 @@
         "text": "Weather advisory: Storm warning in the area. Ferry services may experience temporary boarding holds.",
         "stationId": "Maybunga",
         "timestamp": "08:06 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Maybunga",
+        "timestamp": "08:33 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Maybunga",
+        "timestamp": "08:41 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Maybunga",
+        "timestamp": "08:43 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Maybunga",
+        "timestamp": "08:47 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Maybunga",
+        "timestamp": "08:50 PM | 6-14-2026",
         "isSystem": true
       }
     ],
@@ -407,6 +547,48 @@
         "stationId": "San Joaquin",
         "timestamp": "08:08 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "San Joaquin",
+        "timestamp": "08:26 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "San Joaquin",
+        "timestamp": "08:27 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "San Joaquin",
+        "timestamp": "08:29 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "San Joaquin",
+        "timestamp": "08:39 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "San Joaquin",
+        "timestamp": "08:44 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
+        "stationId": "San Joaquin",
+        "timestamp": "08:48 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "Guadalupe": [
@@ -450,6 +632,41 @@
         "text": "Weather advisory: Storm warning in the area. Ferry services may experience temporary boarding holds.",
         "stationId": "Guadalupe",
         "timestamp": "08:06 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Guadalupe",
+        "timestamp": "08:23 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Guadalupe",
+        "timestamp": "08:29 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Guadalupe",
+        "timestamp": "08:35 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Guadalupe",
+        "timestamp": "08:36 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Guadalupe",
+        "timestamp": "08:51 PM | 6-14-2026",
         "isSystem": true
       }
     ],
@@ -501,6 +718,13 @@
         "text": "Weather advisory: Storm warning in the area. Ferry services may experience temporary boarding holds.",
         "stationId": "Escolta",
         "timestamp": "08:06 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Active rain detected. Expect wet boarding docks. Please tread carefully.",
+        "stationId": "Escolta",
+        "timestamp": "08:34 PM | 6-14-2026",
         "isSystem": true
       }
     ],
@@ -559,6 +783,20 @@
         "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
         "stationId": "Valenzuela",
         "timestamp": "08:09 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Valenzuela",
+        "timestamp": "08:13 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Valenzuela",
+        "timestamp": "08:15 PM | 6-14-2026",
         "isSystem": true
       }
     ],
@@ -646,6 +884,41 @@
         "stationId": "Lawton",
         "timestamp": "08:06 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Lawton",
+        "timestamp": "08:21 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Lawton",
+        "timestamp": "08:28 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Lawton",
+        "timestamp": "08:45 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Lawton",
+        "timestamp": "08:53 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Lawton",
+        "timestamp": "08:54 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "Sta. Ana": [
@@ -711,6 +984,20 @@
         "stationId": "Sta. Ana",
         "timestamp": "08:06 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Sta. Ana",
+        "timestamp": "08:22 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Sta. Ana",
+        "timestamp": "08:49 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "Quinta": [
@@ -755,6 +1042,27 @@
         "stationId": "Quinta",
         "timestamp": "08:06 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
+        "stationId": "Quinta",
+        "timestamp": "08:14 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Quinta",
+        "timestamp": "08:30 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Quinta",
+        "timestamp": "08:40 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "Lambingan": [
@@ -792,6 +1100,55 @@
         "stationId": "Lambingan",
         "timestamp": "08:11 PM | 6-14-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Lambingan",
+        "timestamp": "08:19 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Lambingan",
+        "timestamp": "08:23 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Lambingan",
+        "timestamp": "08:25 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: High queue size at terminal. Priority boarding active for seniors and PWDs.",
+        "stationId": "Lambingan",
+        "timestamp": "08:31 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Mild river currents today. Standard speeds observed.",
+        "stationId": "Lambingan",
+        "timestamp": "08:35 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Lambingan",
+        "timestamp": "08:42 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Lambingan",
+        "timestamp": "08:53 PM | 6-14-2026",
+        "isSystem": true
       }
     ],
     "Hulo": [
@@ -821,6 +1178,48 @@
         "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
         "stationId": "Hulo",
         "timestamp": "08:07 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "High passenger volume detected. Expect boarding delays of 10-15 minutes.",
+        "stationId": "Hulo",
+        "timestamp": "08:20 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Hulo",
+        "timestamp": "08:37 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Hulo",
+        "timestamp": "08:38 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Notice: Please keep your lifevests secured for the duration of the trip.",
+        "stationId": "Hulo",
+        "timestamp": "08:38 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Service Advisory: Schedule running smoothly. Boat departures are fully operational.",
+        "stationId": "Hulo",
+        "timestamp": "08:41 PM | 6-14-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Ferry arriving in 5 minutes.",
+        "stationId": "Hulo",
+        "timestamp": "08:52 PM | 6-14-2026",
         "isSystem": true
       }
     ]

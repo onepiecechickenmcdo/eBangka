@@ -359,6 +359,17 @@ async function fetchStations() {
 // ==========================================================================
 // Render Timeline Map
 // ==========================================================================
+function getStationRegion(station) {
+  const pasigStations = new Set(["Pinagbuhatan", "Kalawaan", "San Joaquin", "Maybunga"]);
+  const mandaluyongMakatiStations = new Set(["Guadalupe", "Hulo", "Valenzuela"]);
+  const manilaStations = new Set(["Lambingan", "Sta. Ana", "PUP", "Quinta", "Lawton", "Escolta"]);
+
+  if (pasigStations.has(station.name)) return "pasig";
+  if (mandaluyongMakatiStations.has(station.name)) return "mandaluyong-makati";
+  if (manilaStations.has(station.name)) return "manila";
+  return "all";
+}
+
 function filterAndRenderTimeline() {
   const query = dom.stationSearch.value.toLowerCase().trim();
   const activeTab = document.querySelector(".dir-tab.active");
@@ -371,8 +382,9 @@ function filterAndRenderTimeline() {
     const addressMatch = st.address.toLowerCase().includes(query);
     const queryMatch = nameMatch || cityMatch || addressMatch;
     
-    // Direction match
-    const dirMatch = selectedDir === "all" || st.direction === selectedDir;
+    // Region match
+    const region = getStationRegion(st);
+    const dirMatch = selectedDir === "all" || region === selectedDir;
     
     return queryMatch && dirMatch;
   });
@@ -816,7 +828,7 @@ function displayNearestStationResult(stationData, userLat, userLon) {
       </div>
       
       <!-- Embedded Map -->
-      <div id="${mapId}" class="location-map"></div>
+      <div id="${mapId}" class="location-map" data-user-lat="${userLat}" data-user-lon="${userLon}" data-station-lat="${stationLat}" data-station-lon="${stationLon}" data-station-name="${station}"></div>
       
       <div class="location-actions">
         <button class="btn btn-navigate" onclick="openLocationInMaps(${stationLat}, ${stationLon})">
@@ -833,29 +845,32 @@ function displayNearestStationResult(stationData, userLat, userLon) {
   
   // Initialize map after DOM is rendered
   setTimeout(() => {
-    initializeMap(mapId, userLat, userLon, stationLat, stationLon, station);
+    initializeRouteMap(mapId, userLat, userLon, stationLat, stationLon, station);
   }, 100);
 }
 
-/**
- * Initialize embedded map using Leaflet
- * Shows user location and nearest station on interactive map
- */
-function initializeMap(mapId, userLat, userLon, stationLat, stationLon, stationName) {
+function initializeRouteMap(mapId, userLat, userLon, stationLat, stationLon, stationName) {
   try {
-    // Create map centered between user and station
+    // Clear previous map if exists
+    const mapEl = document.getElementById(mapId);
+    if (mapEl._leaflet_map) {
+      mapEl._leaflet_map.remove();
+    }
+    mapEl.innerHTML = '';
+    
     const centerLat = (userLat + stationLat) / 2;
     const centerLon = (userLon + stationLon) / 2;
     
     const map = L.map(mapId).setView([centerLat, centerLon], 15);
+    mapEl._leaflet_map = map;
     
-    // Add OpenStreetMap tiles (free, no API key needed)
+    // OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
       maxZoom: 19
     }).addTo(map);
     
-    // Add user location marker (blue)
+    // Add user marker (blue)
     L.circleMarker([userLat, userLon], {
       radius: 8,
       fillColor: '#06b6d4',
@@ -863,8 +878,7 @@ function initializeMap(mapId, userLat, userLon, stationLat, stationLon, stationN
       weight: 2,
       opacity: 1,
       fillOpacity: 0.8
-    }).addTo(map)
-      .bindPopup('📍 Your Location', { autoClose: false });
+    }).addTo(map).bindPopup('📍 Your Location');
     
     // Add station marker (green)
     L.marker([stationLat, stationLon], {
@@ -874,31 +888,100 @@ function initializeMap(mapId, userLat, userLon, stationLat, stationLon, stationN
         iconAnchor: [16, 32],
         popupAnchor: [0, -32]
       })
-    }).addTo(map)
-      .bindPopup(`🚤 ${stationName} Station`, { autoClose: false })
-      .openPopup();
+    }).addTo(map).bindPopup(`🚤 ${stationName} Station`).openPopup();
     
-    // Draw line between user and station
-    L.polyline([
-      [userLat, userLon],
-      [stationLat, stationLon]
-    ], {
-      color: '#06b6d4',
-      weight: 2,
-      opacity: 0.5,
-      dashArray: '5, 5'
-    }).addTo(map);
-    
-    // Fit map to show both points
-    const bounds = L.latLngBounds([
-      [userLat, userLon],
-      [stationLat, stationLon]
-    ]);
-    map.fitBounds(bounds, { padding: [50, 50] });
+    addWalkingRoute(map, userLat, userLon, stationLat, stationLon);
     
   } catch (err) {
-    console.error('Error initializing map:', err);
-    document.getElementById(mapId).innerHTML = '<p style="color: #ef4444; padding: 20px; text-align: center;">Map could not be loaded</p>';
+    console.error('Error initializing route map:', err);
+    document.getElementById(mapId).innerHTML = '<p style="color: #ef4444; padding: 20px;">Route map could not be loaded</p>';
+  }
+}
+
+function addWalkingRoute(map, userLat, userLon, stationLat, stationLon) {
+  try {
+    const walkingControl = L.Routing.control({
+      waypoints: [
+        L.latLng(userLat, userLon),
+        L.latLng(stationLat, stationLon)
+      ],
+      router: L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1',
+        profile: 'foot'
+      }),
+      // Disable interactive waypoint creation
+      addWaypoints: false,
+      draggableWaypoints: false,
+      routeWhileDragging: false,
+      showAlternatives: false,
+      fitSelectedRoutes: true,
+      // Hide the default routing control UI panel
+      show: false,
+      lineOptions: {
+        styles: [{ color: '#06b6d4', opacity: 0.8, weight: 5 }]
+      },
+      // Use custom marker creation to prevent unwanted popups
+      createMarker: function() { return false; }
+    }).addTo(map);
+    
+    walkingControl.on('routesfound', function(e) {
+      if (e.routes && e.routes.length > 0) {
+        const route = e.routes[0];
+        const time = (route.summary.totalTime / 60).toFixed(1);
+        const dist = (route.summary.totalDistance / 1000).toFixed(2);
+        console.log(`Walking Route: ${dist} km, ${time} mins`);
+      }
+    });
+    
+  } catch (err) {
+    console.error('Error adding walking route:', err);
+  }
+}
+
+function addVehicleRoute(map, userLat, userLon, stationLat, stationLon) {
+  try {
+    // Disable map interaction to prevent accidental marker creation
+    map.dragging.disable();
+    map.scrollWheelZoom.disable();
+    
+    const vehicleControl = L.Routing.control({
+      waypoints: [
+        L.latLng(userLat, userLon),
+        L.latLng(stationLat, stationLon)
+      ],
+      router: L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1',
+        profile: 'car'
+      }),
+      // Disable interactive waypoint creation
+      addWaypoints: false,
+      draggableWaypoints: false,
+      routeWhileDragging: false,
+      showAlternatives: false,
+      fitSelectedRoutes: true,
+      // Hide the default routing control UI panel
+      show: false,
+      lineOptions: {
+        styles: [{ color: '#8b5cf6', opacity: 0.8, weight: 5 }]
+      },
+      // Use custom marker creation to prevent unwanted popups
+      createMarker: function() { return false; }
+    }).addTo(map);
+    
+    vehicleControl.on('routesfound', function(e) {
+      if (e.routes && e.routes.length > 0) {
+        const route = e.routes[0];
+        const time = (route.summary.totalTime / 60).toFixed(1);
+        const dist = (route.summary.totalDistance / 1000).toFixed(2);
+        console.log(`Vehicle Route: ${dist} km, ${time} mins`);
+      }
+    });
+    
+    // Prevent accidental clicks from creating markers
+    map.on('click', function(e) { e.originalEvent.preventDefault(); });
+    
+  } catch (err) {
+    console.error('Error adding vehicle route:', err);
   }
 }
 

@@ -26,6 +26,10 @@
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
+    <!-- Leaflet Routing Machine (for route calculation) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -154,13 +158,14 @@
             </div>
 
             <div class="direction-tabs">
-              <button class="dir-tab active" data-dir="all">All</button>
-              <button class="dir-tab" data-dir="downstream">
-                <span class="tab-arrow">↓</span> Downstream
-              </button>
-              <button class="dir-tab" data-dir="upstream">
-                <span class="tab-arrow">↑</span> Upstream
-              </button>
+              <div class="direction-tabs-row direction-tabs-row-top">
+                <button class="dir-tab active" data-dir="all">All</button>
+              </div>
+              <div class="direction-tabs-row direction-tabs-row-bottom">
+                <button class="dir-tab" data-dir="pasig">Pasig</button>
+                <button class="dir-tab" data-dir="mandaluyong-makati">Mandaluyong / Makati</button>
+                <button class="dir-tab" data-dir="manila">Manila</button>
+              </div>
             </div>
           </div>
 
@@ -188,8 +193,9 @@
             <div class="route-container">
               <!-- Per-tab route lines -->
               <div class="route-river-line route-river-line-all active" data-dir="all"></div>
-              <div class="route-river-line route-river-line-downstream" data-dir="downstream"></div>
-              <div class="route-river-line route-river-line-upstream" data-dir="upstream"></div>
+              <div class="route-river-line route-river-line-pasig" data-dir="pasig"></div>
+              <div class="route-river-line route-river-line-mandaluyong-makati" data-dir="mandaluyong-makati"></div>
+              <div class="route-river-line route-river-line-manila" data-dir="manila"></div>
 
               <!-- Dynamic station nodes -->
               <div id="stations-timeline" class="stations-timeline">
