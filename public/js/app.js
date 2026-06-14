@@ -204,6 +204,12 @@ function setupEventListeners() {
     });
   });
 
+  window.addEventListener("resize", updateRouteLineForActiveTab);
+
+  if (dom.findNearestBtn) {
+    dom.findNearestBtn.addEventListener("click", findNearestStation);
+  }
+
   // Star icon click
   dom.favoriteToggleBtn.addEventListener("click", () => {
     if (state.selectedStation) {
@@ -428,39 +434,47 @@ function updateRouteLineForActiveTab() {
   routeLines.forEach(line => {
     line.classList.toggle("active", line === activeLine);
     if (line !== activeLine) {
-      line.style.height = "0";
+      line.style.height = "0px";
+      line.style.top = "0px";
     }
   });
 
   if (!activeLine) return;
-  const routeContainer = dom.stationsTimeline.closest(".route-container");
-  if (!routeContainer) return;
 
-  const items = dom.stationsTimeline.querySelectorAll(".timeline-item");
-  if (items.length === 0) {
-    activeLine.style.top = "0";
-    activeLine.style.height = "0";
-    return;
-  }
+  const measureLine = () => {
+    const routeContainer = dom.stationsTimeline.closest(".route-container");
+    if (!routeContainer) return;
 
-  const firstDot = items[0].querySelector(".node-dot");
-  const lastDot = items[items.length - 1].querySelector(".node-dot");
-  if (!firstDot || !lastDot) {
-    activeLine.style.top = "0";
-    activeLine.style.height = "0";
-    return;
-  }
+    const items = dom.stationsTimeline.querySelectorAll(".timeline-item");
+    if (items.length === 0) {
+      activeLine.style.top = "0px";
+      activeLine.style.height = "0px";
+      return;
+    }
 
-  const containerRect = routeContainer.getBoundingClientRect();
-  const firstRect = firstDot.getBoundingClientRect();
-  const lastRect = lastDot.getBoundingClientRect();
+    const firstDot = items[0].querySelector(".node-dot");
+    const lastDot = items[items.length - 1].querySelector(".node-dot");
+    if (!firstDot || !lastDot) {
+      activeLine.style.top = "0px";
+      activeLine.style.height = "0px";
+      return;
+    }
 
-  const topOffset = firstRect.top + firstRect.height / 2 - containerRect.top;
-  const bottomOffset = lastRect.top + lastRect.height / 2 - containerRect.top;
-  const heightValue = Math.max(bottomOffset - topOffset, 0);
+    const containerRect = routeContainer.getBoundingClientRect();
+    const firstRect = firstDot.getBoundingClientRect();
+    const lastRect = lastDot.getBoundingClientRect();
 
-  activeLine.style.top = `${topOffset}px`;
-  activeLine.style.height = `${heightValue}px`;
+    const firstCenter = firstRect.top + firstRect.height / 2;
+    const lastCenter = lastRect.top + lastRect.height / 2;
+    const topOffset = Math.max(firstCenter - containerRect.top, 0);
+    const rawHeight = lastCenter - firstCenter;
+    const heightValue = Math.max(rawHeight, 0);
+
+    activeLine.style.top = `${topOffset}px`;
+    activeLine.style.height = `${heightValue}px`;
+  };
+
+  window.requestAnimationFrame(measureLine);
 }
 
 // ==========================================================================
@@ -781,7 +795,7 @@ function displayNearestStationResult(stationData, userLat, userLon) {
   // Format distance: show in km with 2 decimal places
   const distanceStr = distance < 1 
     ? `${Math.round(distance * 1000)} meters` 
-    : `${distance.toFixed(2)} km`;
+    : `${distance.toFixed(2)} kms`;
   
   // Generate unique map ID for this result
   const mapId = `map-${Date.now()}`;
@@ -803,18 +817,6 @@ function displayNearestStationResult(stationData, userLat, userLon) {
       
       <!-- Embedded Map -->
       <div id="${mapId}" class="location-map"></div>
-      
-      <!-- Distance and Direction Info -->
-      <div class="location-map-info">
-        <div class="distance-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 8v8M8 12h8"></path>
-          </svg>
-          <span>${distanceStr}</span>
-        </div>
-        <p class="direction-hint">📍 Station location shown on map above</p>
-      </div>
       
       <div class="location-actions">
         <button class="btn btn-navigate" onclick="openLocationInMaps(${stationLat}, ${stationLon})">
@@ -918,8 +920,8 @@ function showLocationError(message) {
     <div class="location-error">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        <path d="M12 8v5" stroke-linecap="round"></path>
+        <circle cx="12" cy="17.5" r="1" fill="currentColor"></circle>
       </svg>
       <p>${message}</p>
     </div>
