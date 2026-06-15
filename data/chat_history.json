@@ -154,6 +154,27 @@
         "stationId": "Kalawaan",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Kalawaan",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "bigmonkey",
+        "text": "test",
+        "stationId": "Kalawaan",
+        "timestamp": "04:08 PM | 6-15-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Kalawaan",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "PUP": [
@@ -267,6 +288,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "PUP",
         "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "PUP",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "PUP",
+        "timestamp": "04:14 PM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -466,6 +501,34 @@
         "stationId": "Pinagbuhatan",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "Commuter_7331",
+        "text": "hello",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": false
+      },
+      {
+        "username": "Commuter_7331",
+        "text": "dadada",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Pinagbuhatan",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "San Joaquin": [
@@ -657,6 +720,20 @@
         "stationId": "San Joaquin",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "San Joaquin",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "San Joaquin",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Guadalupe": [
@@ -785,6 +862,20 @@
         "stationId": "Guadalupe",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Guadalupe",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Guadalupe",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Escolta": [
@@ -877,6 +968,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Escolta",
         "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Escolta",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Escolta",
+        "timestamp": "04:14 PM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -984,6 +1089,27 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Valenzuela",
         "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Valenzuela",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "bigmonkey",
+        "text": "hello hello",
+        "stationId": "Valenzuela",
+        "timestamp": "03:54 PM | 6-15-2026",
+        "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Valenzuela",
+        "timestamp": "04:14 PM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -1141,6 +1267,20 @@
         "stationId": "Lawton",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Lawton",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Lawton",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Sta. Ana": [
@@ -1261,6 +1401,20 @@
         "text": "Weather advisory: Heavy rain showers observed. Expect minor boarding delays.",
         "stationId": "Sta. Ana",
         "timestamp": "02:07 AM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Sta. Ana",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Sta. Ana",
+        "timestamp": "04:14 PM | 6-15-2026",
         "isSystem": true
       }
     ],
@@ -1397,6 +1551,20 @@
         "stationId": "Quinta",
         "timestamp": "02:09 AM | 6-15-2026",
         "isSystem": false
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Quinta",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Quinta",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Lambingan": [
@@ -1525,6 +1693,20 @@
         "stationId": "Lambingan",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Lambingan",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Lambingan",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ],
     "Hulo": [
@@ -1632,11 +1814,26 @@
         "stationId": "Hulo",
         "timestamp": "02:07 AM | 6-15-2026",
         "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Hulo",
+        "timestamp": "03:50 PM | 6-15-2026",
+        "isSystem": true
+      },
+      {
+        "username": "SYSTEM ALERT",
+        "text": "Weather advisory: Rain showers expected. Boarding gates might be slippery. Stay safe.",
+        "stationId": "Hulo",
+        "timestamp": "04:14 PM | 6-15-2026",
+        "isSystem": true
       }
     ]
   },
   "users": {
     "superkei": "uid_tkyhllqtgxhk0x34rt8wdh",
-    "superkei1": "uid_132ybg38oiss5hvkxgarrn"
+    "superkei1": "uid_132ybg38oiss5hvkxgarrn",
+    "Alvel": "uid_1efaggve9uhbqch3iub0og"
   }
 }

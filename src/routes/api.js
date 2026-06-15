@@ -77,10 +77,8 @@ router.get("/next-ferry/:station", (req, res) => {
  *   - No stations found in database
  */
 router.get("/nearest-station", (req, res) => {
-  // Extract latitude and longitude from query parameters
   const { lat, lng } = req.query;
 
-  // Validate that both parameters are provided
   if (!lat || !lng) {
     return res.status(400).json({
       error: "Missing parameters. Required: lat and lng",
@@ -88,7 +86,6 @@ router.get("/nearest-station", (req, res) => {
     });
   }
 
-  // Parse and validate coordinates
   const latitude = parseFloat(lat);
   const longitude = parseFloat(lng);
 
@@ -98,14 +95,12 @@ router.get("/nearest-station", (req, res) => {
     });
   }
 
-  // Validate latitude range: -90 to 90
   if (latitude < -90 || latitude > 90) {
     return res.status(400).json({
       error: "Invalid latitude. Must be between -90 and 90",
     });
   }
 
-  // Validate longitude range: -180 to 180
   if (longitude < -180 || longitude > 180) {
     return res.status(400).json({
       error: "Invalid longitude. Must be between -180 and 180",
@@ -113,14 +108,9 @@ router.get("/nearest-station", (req, res) => {
   }
 
   try {
-    // Get all stations from the ferry service
     const stations = ferryService.getAllStations();
-
-    // Find the nearest station using Haversine formula
-    // Algorithm: O(n) - loops through all stations once
     const nearestStation = findNearestStation(latitude, longitude, stations);
 
-    // Check if any station was found
     if (!nearestStation) {
       return res.status(500).json({
         error: "No stations with coordinates found",
@@ -129,7 +119,6 @@ router.get("/nearest-station", (req, res) => {
 
     const nextFerry = ferryService.getNextFerry(nearestStation.station);
 
-    // Return the nearest station result with the station's current service status.
     res.json({
       ...nearestStation,
       status: nextFerry.next_ferry_time
