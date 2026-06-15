@@ -4,7 +4,7 @@
  */
 
 // Global App State
-const socket = io(); // CHAT FIX: Safely instantiate the Socket engine link immediately
+const socket = io(); // Initialize Socket.io connection
 
 const state = {
   stations: [],
@@ -28,23 +28,23 @@ const dom = {
   stationsTimeline: document.getElementById("stations-timeline"),
   activeStationPanel: document.getElementById("active-station-panel"),
   stationPlaceholderPanel: document.getElementById("station-placeholder-panel"),
-  
+
   // Details pane
   detailStationCity: document.getElementById("detail-station-city"),
   detailStationName: document.getElementById("detail-station-name"),
   detailStationAddress: document.getElementById("detail-station-address"),
   favoriteToggleBtn: document.getElementById("favorite-toggle-btn"),
-  
+
   // Countdown
   countdownTimerDisplay: document.getElementById("countdown-timer-display"),
   countdownSecondaryInfo: document.getElementById("countdown-secondary-info"),
-  
+
   // Time Machine
   timeMachineToggle: document.getElementById("time-machine-toggle"),
   timeMachineControls: document.getElementById("time-machine-controls"),
   timeMachinePicker: document.getElementById("time-machine-picker"),
   useCurrentTimeBtn: document.getElementById("use-current-time-btn"),
-  
+
   // Schedule Grid
   scheduleGrid: document.getElementById("schedule-timeline-grid"),
 
@@ -72,11 +72,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     socket.emit('authenticate', userId);
   }
   setupEventListeners();
-  
+
   // Fetch initial configuration
   await fetchOperationalInfo();
   await fetchStations();
-  
+
   // Poll timeline info every 60s to refresh next-boat status
   state.refreshTimelineInterval = setInterval(fetchStations, 60000);
   startTimelineEtaTicker();
@@ -91,13 +91,13 @@ function initUsername() {
     userId = "uid_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     localStorage.setItem("ebangka_userId", userId);
   }
-  
-  // Display current local username placeholder until server confirms
+
+  // Displays current local username placeholder until server confirms
   let username = localStorage.getItem("ebangka_username") || "Commuter";
   if (dom.usernameDisplay) {
     dom.usernameDisplay.textContent = username;
   }
-  
+
   return userId;
 }
 
@@ -136,7 +136,7 @@ function toggleFavorite(stationName) {
   } else {
     state.favorites.splice(index, 1);
   }
-  
+
   localStorage.setItem("ebangka_favorites", JSON.stringify(state.favorites));
   renderFavorites();
   updateFavoriteButtonState();
@@ -147,10 +147,10 @@ function renderFavorites() {
     dom.favoritesSection.classList.add("hidden");
     return;
   }
-  
+
   dom.favoritesSection.classList.remove("hidden");
   dom.favoritesList.innerHTML = "";
-  
+
   state.favorites.forEach(name => {
     const pill = document.createElement("button");
     pill.className = "favorite-pill";
@@ -165,7 +165,7 @@ function renderFavorites() {
 
 function updateFavoriteButtonState() {
   if (!state.selectedStation) return;
-  
+
   const isFav = state.favorites.includes(state.selectedStation.station);
   if (isFav) {
     dom.favoriteToggleBtn.classList.add("starred");
@@ -197,11 +197,11 @@ function setupEventListeners() {
       toggleFavorite(state.selectedStation.station);
     }
   });
-  
+
   // Time Machine toggle
   dom.timeMachineToggle.addEventListener("change", (e) => {
     state.timeMachineActive = e.target.checked;
-    
+
     if (state.timeMachineActive) {
       dom.timeMachineControls.classList.remove("disabled");
       dom.useCurrentTimeBtn.removeAttribute("disabled");
@@ -212,18 +212,18 @@ function setupEventListeners() {
       dom.useCurrentTimeBtn.setAttribute("disabled", "true");
       dom.timeMachinePicker.setAttribute("disabled", "true");
       document.querySelector(".time-machine-container").classList.remove("active");
-      
+
       // Update simulated time to match reality on switch-off
       initTimePicker();
     }
-    
+
     // Refresh station stats
     if (state.selectedStation) {
       refreshActiveStationData();
     }
     fetchStations(); // Update timeline counts
   });
-  
+
   // Simulated Time Picker changes
   dom.timeMachinePicker.addEventListener("change", (e) => {
     state.simulatedTime = e.target.value;
@@ -232,7 +232,7 @@ function setupEventListeners() {
     }
     fetchStations();
   });
-  
+
   // Reset time button
   dom.useCurrentTimeBtn.addEventListener("click", () => {
     initTimePicker();
@@ -277,19 +277,19 @@ async function fetchOperationalInfo() {
 
 function updateServiceStatusPill() {
   const isSunday = new Date().getDay() === 0;
-  
+
   if (isSunday) {
     dom.serviceStatusPill.className = "status-pill status-closed";
     dom.serviceStatusText.textContent = "Service Closed (Sunday)";
     return;
   }
-  
+
   // Check operating hours
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const start = state.operationalInfo.service_hours?.start_minutes ?? 420;
   const end = state.operationalInfo.service_hours?.end_minutes ?? 1110;
-  
+
   if (currentMinutes < start) {
     dom.serviceStatusPill.className = "status-pill status-closed";
     dom.serviceStatusText.textContent = `Opens at ${state.operationalInfo.service_hours?.start || "7:00 AM"}`;
@@ -307,7 +307,7 @@ async function fetchStations() {
     const res = await fetch("/stations");
     const data = await res.json();
     state.routeOrder = data.route_order || [];
-    
+
     // Fetch ETA details for each station in fixed route order
     const stationsWithNext = await Promise.all(
       data.stations.map(async (st) => {
@@ -315,7 +315,7 @@ async function fetchStations() {
         if (state.timeMachineActive) {
           url += `?time=${state.simulatedTime}`;
         }
-        
+
         try {
           const nextRes = await fetch(url);
           const nextData = await nextRes.json();
@@ -330,7 +330,7 @@ async function fetchStations() {
         }
       })
     );
-    
+
     state.stations = stationsWithNext;
     renderTimeline();
   } catch (err) {
@@ -394,9 +394,9 @@ function renderTimelineHTML(stations) {
     updateRouteLine();
     return;
   }
-  
+
   dom.stationsTimeline.innerHTML = "";
-  
+
   stations.forEach(st => {
     const item = document.createElement("div");
     item.className = "timeline-item";
@@ -404,10 +404,10 @@ function renderTimelineHTML(stations) {
     if (state.selectedStation && state.selectedStation.station === st.name) {
       item.classList.add("active");
     }
-    
+
     const etaText = formatArrivalEta(st.minutes_from_now, st.message, st.next_ferry_time);
     const hasEta = Boolean(st.next_ferry_time && st.minutes_from_now != null);
-    
+
     item.innerHTML = `
       <div class="node-dot"></div>
       <div class="timeline-content">
@@ -420,7 +420,7 @@ function renderTimelineHTML(stations) {
         </div>
       </div>
     `;
-    
+
     item.addEventListener("click", () => selectStation(st.name));
     dom.stationsTimeline.appendChild(item);
   });
@@ -522,7 +522,7 @@ async function selectStation(stationName) {
   // Update class highlighting in timeline elements immediately
   const items = dom.stationsTimeline.querySelectorAll(".timeline-item");
   const timelineStations = Array.from(items);
-  
+
   timelineStations.forEach(el => {
     const elName = el.querySelector(".station-name").textContent;
     if (elName === stationName) {
@@ -537,33 +537,33 @@ async function selectStation(stationName) {
     const scheduleRes = await fetch(`/schedule/${encodeURIComponent(stationName)}`);
     if (!scheduleRes.ok) throw new Error("Station schedule loading failed.");
     const scheduleData = await scheduleRes.json();
-    
+
     state.selectedStation = scheduleData;
-    
+
     dom.stationPlaceholderPanel.classList.add("hidden");
     dom.activeStationPanel.classList.remove("hidden");
-    
-// Populate header info
+
+    // Populate header info
     dom.detailStationName.textContent = scheduleData.station;
     dom.detailStationCity.textContent = scheduleData.city;
     dom.detailStationAddress.textContent = scheduleData.address;
-    
-    // CHAT ENGINE SYNC: Directly extract structural string out of rendering layout
+
+    // Join chat room for selected station
     setTimeout(() => {
-        const liveStationName = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
-        if (liveStationName) {
-            if (dom.chatStationSubtitle) {
-                dom.chatStationSubtitle.textContent = `Live @ ${liveStationName}`;
-            }
-            if (socket) {
-                socket.emit('joinStationChat', liveStationName);
-            }
+      const liveStationName = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
+      if (liveStationName) {
+        if (dom.chatStationSubtitle) {
+          dom.chatStationSubtitle.textContent = `Live @ ${liveStationName}`;
         }
-    }, 50); // Small 50ms delay to make absolute sure her DOM paint cycle completes first!
-    
+        if (socket) {
+          socket.emit('joinStationChat', liveStationName);
+        }
+      }
+    }, 50); // Short delay for DOM update to complete
+
     updateFavoriteButtonState();
     await refreshActiveStationData();
-    
+
   } catch (err) {
     console.error("Select station failed:", err);
   }
@@ -574,22 +574,22 @@ async function selectStation(stationName) {
 // ==========================================================================
 async function refreshActiveStationData() {
   if (!state.selectedStation) return;
-  
+
   clearInterval(state.tickerInterval);
-  
+
   const stationName = state.selectedStation.station;
   let nextFerryUrl = `/next-ferry/${encodeURIComponent(stationName)}`;
   if (state.timeMachineActive) {
     nextFerryUrl += `?time=${state.simulatedTime}`;
   }
-  
+
   try {
     const nextRes = await fetch(nextFerryUrl);
     const nextData = await nextRes.json();
-    
+
     renderScheduleGrid(nextData.next_ferry_time);
     startCountdown(nextData);
-    
+
   } catch (err) {
     console.error("Refresh active station prediction failed:", err);
   }
@@ -598,9 +598,9 @@ async function refreshActiveStationData() {
 function renderScheduleGrid(nextFerryTime) {
   const departures = state.selectedStation.departures || [];
   const scheduleMinutes = state.selectedStation.schedule_minutes || [];
-  
+
   dom.scheduleGrid.innerHTML = "";
-  
+
   // Resolve current time limit to determine past vs future
   let borderMinutes;
   if (state.timeMachineActive) {
@@ -609,15 +609,15 @@ function renderScheduleGrid(nextFerryTime) {
     const d = new Date();
     borderMinutes = d.getHours() * 60 + d.getMinutes();
   }
-  
+
   departures.forEach((timeStr, idx) => {
     const minutesVal = scheduleMinutes[idx];
     const slot = document.createElement("div");
     slot.className = "schedule-slot";
     slot.textContent = format12h(timeStr);
-    
+
     const isNext = nextFerryTime && parseTimeStringToMinutes(nextFerryTime) === minutesVal;
-    
+
     if (minutesVal < borderMinutes) {
       slot.classList.add("slot-past");
     } else if (isNext) {
@@ -625,7 +625,7 @@ function renderScheduleGrid(nextFerryTime) {
     } else {
       slot.classList.add("slot-future");
     }
-    
+
     dom.scheduleGrid.appendChild(slot);
   });
 }
@@ -635,21 +635,21 @@ function renderScheduleGrid(nextFerryTime) {
 // ==========================================================================
 function startCountdown(nextFerryData) {
   if (state.tickerInterval) clearInterval(state.tickerInterval);
-  
+
   const timerEl = dom.countdownTimerDisplay;
   const descEl = dom.countdownSecondaryInfo;
-  
+
   if (!nextFerryData.next_ferry_time) {
     timerEl.textContent = "--:--";
     timerEl.style.fontSize = "2.2rem";
     descEl.textContent = nextFerryData.message || "Ferry departures completed for today.";
     return;
   }
-  
+
   timerEl.style.fontSize = "3rem";
   const targetTimeStr = nextFerryData.next_ferry_time;
   const targetMinutes = parseTimeStringToMinutes(targetTimeStr);
-  
+
   if (state.timeMachineActive) {
     const diffMinutes = nextFerryData.minutes_from_now;
     if (diffMinutes < 0) {
@@ -661,32 +661,32 @@ function startCountdown(nextFerryData) {
     }
     return;
   }
-  
+
   const updateTimer = () => {
     const now = new Date();
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
     const currentSeconds = now.getSeconds();
-    
+
     const totalRemainingSeconds = (targetMinutes - currentMinutes) * 60 - currentSeconds;
-    
+
     if (totalRemainingSeconds <= 0) {
       clearInterval(state.tickerInterval);
       timerEl.textContent = "00m 00s";
       descEl.textContent = "The ferry is arriving now";
-      
+
       setTimeout(() => {
         refreshActiveStationData();
         fetchStations();
       }, 3000);
       return;
     }
-    
+
     const totalMins = Math.floor(totalRemainingSeconds / 60);
 
     timerEl.textContent = formatCompactDuration(totalMins);
     descEl.textContent = formatArrivalEta(totalMins, null, targetTimeStr);
   };
-  
+
   // Initial draw and run ticker
   updateTimer();
   state.tickerInterval = setInterval(updateTimer, 1000);
@@ -707,14 +707,14 @@ function parseTimeStringToMinutes(timeStr) {
     else if (period === "PM" && hours !== 12) hours += 12;
     return hours * 60 + minutes;
   }
-  
+
   const twentyFour = trimmed.match(/^(\d{1,2}):(\d{2})$/);
   if (twentyFour) {
     const hours = parseInt(twentyFour[1], 10);
     const minutes = parseInt(twentyFour[2], 10);
     return hours * 60 + minutes;
   }
-  
+
   return 0;
 }
 
@@ -722,30 +722,30 @@ function format12h(time24) {
   // HH:MM -> HH:MM AM/PM
   const match = time24.match(/^(\d{1,2}):(\d{2})$/);
   if (!match) return time24; // Return as-is if already in 12h or other form
-  
+
   let h = parseInt(match[1], 10);
   const m = match[2];
   const ampm = h >= 12 ? "PM" : "AM";
-  
+
   h = h % 12;
   h = h ? h : 12; // if h is 0, make it 12
-  
+
   return `${h}:${m} ${ampm}`;
 }
 
 // ==========================================================================
-// Twitch/YouTube Style Sidebar Chat Event Core Logic
+// Community Chat Logic
 // ==========================================================================
 
 if (socket) {
-  // 1. Clear out old room bubbles and dump fresh history log
+  // Load room chat history
   socket.on('loadHistory', (history) => {
     if (!dom.chatMessages) return;
-    dom.chatMessages.innerHTML = ''; 
+    dom.chatMessages.innerHTML = '';
     history.forEach(appendMessageToUI);
   });
 
-  // 2. Hear real-time broadcasts from other commuting profiles
+  // Listen for real-time messages
   socket.on('chatMessage', (msg) => {
     const activeStation = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
     if (activeStation && msg.stationId === activeStation) {
@@ -753,7 +753,7 @@ if (socket) {
     }
   });
 
-  // 3. Resolve user identity on connection
+  // Resolve user identity on connection
   socket.on('identityResolved', ({ username }) => {
     localStorage.setItem("ebangka_username", username);
     if (dom.usernameDisplay) {
@@ -761,7 +761,7 @@ if (socket) {
     }
   });
 
-  // 4. Handle response of nickname claims
+  // Handle response of nickname changes
   socket.on('usernameChanged', (result) => {
     if (result.success) {
       localStorage.setItem("ebangka_username", result.username);
@@ -829,10 +829,10 @@ function handleUsernameChange() {
   socket.emit('changeUsername', { userId, newUsername: nextUsername });
 }
 
-// 3. Helper to format a message row inside the YouTube layout container
+// Append message row to chat UI
 function appendMessageToUI(msg) {
   if (!dom.chatMessages) return;
-  
+
   const msgRow = document.createElement("div");
   msgRow.className = "chat-message-row";
   if (msg.isSystem || msg.username === "SYSTEM" || msg.username === "SYSTEM ALERT") {
@@ -843,12 +843,12 @@ function appendMessageToUI(msg) {
     <strong class="chat-user">${msg.username}:</strong> 
     <span class="chat-body-text">${msg.text}</span>
   `;
-  
+
   dom.chatMessages.appendChild(msgRow);
-  dom.chatMessages.scrollTop = dom.chatMessages.scrollHeight; // Fast-scroll to latest text bubble
+  dom.chatMessages.scrollTop = dom.chatMessages.scrollHeight; // Scroll to bottom
 }
 
-// 4. Input Listener Dispatches
+// Chat input event listeners
 if (dom.chatSendBtn) dom.chatSendBtn.addEventListener("click", dispatchSocketMessage);
 if (dom.chatInput) {
   dom.chatInput.addEventListener("keypress", (e) => {
@@ -856,7 +856,7 @@ if (dom.chatInput) {
   });
 }
 
-// 5. Gather input payload values and dispatch up via the gateway engine
+// Send chat message to server
 function dispatchSocketMessage() {
   const activeStation = dom.detailStationName ? dom.detailStationName.textContent.trim() : null;
   if (!activeStation || !dom.chatInput || !dom.chatInput.value.trim()) return;
@@ -870,5 +870,5 @@ function dispatchSocketMessage() {
     });
   }
 
-  dom.chatInput.value = ""; // Zero-out the placeholder box field instantly
+  dom.chatInput.value = "";
 }
